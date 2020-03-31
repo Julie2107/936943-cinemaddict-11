@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
-* Студент: [Julia Gankina](https://up.htmlacademy.ru/ecmascript/11/user/936943).
-* Наставник: `Неизвестно`.
+* Студент: [Julia Gankina](https://htmlacademy.ru/profile/id936943).
+* Наставник: [Артём Рудов](https://htmlacademy.ru/profile/artrudov).
 
 ---
 
