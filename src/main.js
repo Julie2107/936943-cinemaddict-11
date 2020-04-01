@@ -46,39 +46,7 @@ const createSort = () => {
   );
 };
 
-const createFilmBlock = () => (`<section class="films"></section>`);
-
-const createFilmsList = () => {
-  return (
-    `<section class="films-list">
-      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-
-      <div class="films-list__container">
-      </div>
-    </section>`
-  );
-};
-
-const createTopRated = () => {
-  return (
-    `<section class="films-list--extra">
-      <h2 class="films-list__title">Top rated</h2>
-      <div class="films-list__container">
-      </div>
-    </section>`
-  );
-};
-
-const createMostCommented = () => {
-  return (
-    `<section class="films-list--extra">
-      <h2 class="films-list__title">Most commented</h2>
-      <div class="films-list__container">
-      </div>
-    </section>`
-  );
-};
-
+const createFilmBlock = () => `<section class="films"></section>`;
 const createCard = () => {
   return (
     `<article class="film-card">
@@ -100,15 +68,49 @@ const createCard = () => {
     </article>`
   );
 };
-
-const createMoreButton = () => (`<button class="films-list__show-more">Show more</button>`);
-
-const createCardsList = (amount, container) => {
-  let cardsListContainer = container.querySelector(`.films-list__container`);
+const createCardsList = (amount) => {
+  let cardsList = ``;
   for (let i = 0; i < amount; i++) {
-    render(cardsListContainer, createCard());
+    cardsList += createCard();
   }
+  return cardsList;
 };
+
+const createFilmsList = () => {
+  return (
+    `<section class="films-list">
+      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+
+      <div class="films-list__container">
+      ${createCardsList(CARDS_AMOUNT)}
+      </div>
+    </section>`
+  );
+};
+
+const createTopRated = () => {
+  return (
+    `<section class="films-list--extra">
+      <h2 class="films-list__title">Top rated</h2>
+      <div class="films-list__container">
+      ${createCardsList(CARDS_AMOUNT_EXTRA)}
+      </div>
+    </section>`
+  );
+};
+
+const createMostCommented = () => {
+  return (
+    `<section class="films-list--extra">
+      <h2 class="films-list__title">Most commented</h2>
+      <div class="films-list__container">
+      ${createCardsList(CARDS_AMOUNT_EXTRA)}
+      </div>
+    </section>`
+  );
+};
+
+const createMoreButton = () => `<button class="films-list__show-more">Show more</button>`;
 
 const createFilmDetails = () => {
   return (
@@ -288,29 +290,24 @@ const render = (container, template, place = Position.BEFOREEND) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render(header, createUserProfile());
-render(main, createNavigation(), Position.AFTERBEGIN);
-render(main, createSort());
-render(main, createFilmBlock());
+const init = () => {
+  render(header, createUserProfile());
+  render(main, createNavigation(), Position.AFTERBEGIN);
+  render(main, createSort());
+  render(main, createFilmBlock());
 
-const filmBlock = main.querySelector(`.films`);
+  const filmBlock = main.querySelector(`.films`);
 
-render(filmBlock, createFilmsList(), Position.AFTERBEGIN);
+  render(filmBlock, createFilmsList(), Position.AFTERBEGIN);
 
-const filmsList = filmBlock.querySelector(`.films-list`);
+  const filmsList = filmBlock.querySelector(`.films-list`);
 
-createCardsList(CARDS_AMOUNT, filmsList);
-render(filmsList, createMoreButton());
-render(filmBlock, createTopRated());
-render(filmBlock, createMostCommented());
+  createCardsList(CARDS_AMOUNT, filmsList);
+  render(filmsList, createMoreButton());
+  render(filmBlock, createTopRated());
+  render(filmBlock, createMostCommented());
 
-const filmsListExtras = filmBlock.querySelectorAll(`.films-list--extra`);
-const [topRatedBlock, mostCommentedBlock] = filmsListExtras;
+  render(footer, createFilmDetails(), Position.AFTEREND);
+};
 
-createCardsList(CARDS_AMOUNT_EXTRA, topRatedBlock);
-createCardsList(CARDS_AMOUNT_EXTRA, mostCommentedBlock);
-
-render(footer, createFilmDetails(), Position.AFTEREND);
-
-const filmDetails = document.querySelector(`.film-details`);
-filmDetails.classList.add(`visually-hidden`);
+init();
