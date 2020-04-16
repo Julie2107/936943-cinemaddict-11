@@ -1,38 +1,58 @@
-import createCardsList from "./components/cardslist.js";
-import {CARDS_AMOUNT, Position} from "./components/consts.js";
+import {CARDS_AMOUNT, CARDS_AMOUNT_RENDER, CARDS_AMOUNT_EXTRA, Position} from "./components/consts.js";
 import createFilmBlock from "./components/film-block.js";
-import createFilmsList from "./components/films-list.js";
-import createMostCommented from "./components/most-commented.js";
 import createNavigation from "./components/navigation.js";
 import createSort from "./components/sort.js";
-import createTopRated from "./components/top-rated.js";
 import createUserProfile from "./components/user-profile.js";
-import createMoreButton from "./components/more-button.js";
 import createFilmDetails from "./components/film-details.js";
-import render from "./components/utils.js";
+import {render} from "./components/utils.js";
+import {generateMovies} from "./mocks/movie.js";
+import {createFooterStatistics} from "./components/footer-statistics.js";
+import {generateFilters} from "./mocks/filters.js";
+import createCardsList from "./components/film-block/cardslist.js";
 
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
+const footerStatsBlock = footer.querySelector(`.footer__statistics`);
+
+export const movies = generateMovies(CARDS_AMOUNT);
+const filters = generateFilters(movies);
+const watchedNumber = filters[filters.findIndex((filter) => filter.name === `History`)].count;
+
+const moviesFirst = movies.slice(0, CARDS_AMOUNT_RENDER);
+const moviesTop = movies.sort((a, b) => b.rating - a.rating).slice(0, CARDS_AMOUNT_EXTRA);
+const moviesCommented = movies.sort((a, b) => b.comments.length - a.comments.length).slice(0, CARDS_AMOUNT_EXTRA);
 
 const init = () => {
-  render(header, createUserProfile());
-  render(main, createNavigation(), Position.AFTERBEGIN);
+  render(header, createUserProfile(watchedNumber));
+  render(main, createNavigation(filters), Position.AFTERBEGIN);
   render(main, createSort());
-  render(main, createFilmBlock());
+  render(main, createFilmBlock(moviesFirst, moviesTop, moviesCommented));
 
-  const filmBlock = main.querySelector(`.films`);
-
-  render(filmBlock, createFilmsList(), Position.AFTERBEGIN);
-
-  const filmsList = filmBlock.querySelector(`.films-list`);
-
-  createCardsList(CARDS_AMOUNT, filmsList);
-  render(filmsList, createMoreButton());
-  render(filmBlock, createTopRated());
-  render(filmBlock, createMostCommented());
-
-  render(footer, createFilmDetails(), Position.AFTEREND);
+  render(footerStatsBlock, createFooterStatistics(movies.length));
+  render(footer, createFilmDetails(movies[0]), Position.AFTEREND);
 };
 
 init();
+
+const loadMoreButton = document.querySelector(`.films-list__show-more`);
+const filmsList = main.querySelector(`.films-list`).querySelector(`.films-list__container`);
+
+const loadMoreHandler = () => {
+  const loadedCards = filmsList.querySelectorAll(`article`);
+  const nextLoading = loadedCards.length + CARDS_AMOUNT_RENDER;
+  const nextMoviesLoad = movies.slice(loadedCards.length, nextLoading);
+  render(filmsList, createCardsList(nextMoviesLoad));
+
+  if (nextLoading >= movies.length) {
+    loadMoreButton.remove();
+  }
+};
+
+loadMoreButton.addEventListener(`click`, loadMoreHandler);
+
+const details = document.querySelector(`.film-details`);
+const closeButton = details.querySelector(`button`);
+closeButton.addEventListener(`click`, function () {
+  details.remove();
+});
