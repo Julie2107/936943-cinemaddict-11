@@ -1,16 +1,15 @@
 import createCardsList from "./cardslist.js";
-import {CARDS_AMOUNT} from "./consts.js";
+import createMoreButton from "./more-button.js";
 
-const createFilmsList = () => {
+export const createFilmsList = (movies) => {
   return (
     `<section class="films-list">
       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
 
       <div class="films-list__container">
-      ${createCardsList(CARDS_AMOUNT)}
+      ${createCardsList(movies)}
       </div>
+      ${createMoreButton()}
     </section>`
   );
 };
-
-export default createFilmsList;
