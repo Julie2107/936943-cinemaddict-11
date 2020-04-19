@@ -1,4 +1,4 @@
-import createCardsList from "./cardslist.js";
+import createCardsList from "../filmcard/cardslist.js";
 
 export const createMostCommented = (movies) => {
   return (

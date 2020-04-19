@@ -1,14 +1,14 @@
 import {CARDS_AMOUNT, CARDS_AMOUNT_RENDER, CARDS_AMOUNT_EXTRA, Position} from "./components/consts.js";
-import createFilmBlock from "./components/film-block.js";
-import createNavigation from "./components/navigation.js";
-import createSort from "./components/sort.js";
+import createFilmBlock from "./components/film-block/film-block.js";
+import createNavigation from "./components/menu/navigation.js";
+import createSort from "./components/sorter/sort.js";
 import createUserProfile from "./components/user-profile.js";
-import createFilmDetails from "./components/film-details.js";
+import createFilmDetails from "./components/film-details/film-details.js";
 import {render} from "./components/utils.js";
 import {generateMovies} from "./mocks/movie.js";
 import {createFooterStatistics} from "./components/footer-statistics.js";
 import {generateFilters} from "./mocks/filters.js";
-import createCardsList from "./components/film-block/cardslist.js";
+import createCardsList from "./components/filmcard/cardslist.js";
 
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
@@ -20,8 +20,8 @@ const filters = generateFilters(movies);
 const watchedNumber = filters[filters.findIndex((filter) => filter.name === `History`)].count;
 
 const moviesFirst = movies.slice(0, CARDS_AMOUNT_RENDER);
-const moviesTop = movies.sort((a, b) => b.rating - a.rating).slice(0, CARDS_AMOUNT_EXTRA);
-const moviesCommented = movies.sort((a, b) => b.comments.length - a.comments.length).slice(0, CARDS_AMOUNT_EXTRA);
+const moviesTop = movies.sort((prevMovie, nextMovie) => nextMovie.rating - prevMovie.rating).slice(0, CARDS_AMOUNT_EXTRA);
+const moviesCommented = movies.sort((prevMovie, nextMovie) => nextMovie.comments.length - prevMovie.comments.length).slice(0, CARDS_AMOUNT_EXTRA);
 
 const init = () => {
   render(header, createUserProfile(watchedNumber));

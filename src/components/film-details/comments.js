@@ -20,7 +20,9 @@ const createDetailsComment = (comment) => {
   );
 };
 
-export const createDetailsCommentsList = (comments) => comments.reduce((commentsList, comment) => {
+const createCommentsList = (commentsList, comment) => {
   commentsList += createDetailsComment(comment);
   return commentsList;
-}, ``);
+};
+
+export const createDetailsCommentsList = (comments) => comments.reduce(createCommentsList, ``);

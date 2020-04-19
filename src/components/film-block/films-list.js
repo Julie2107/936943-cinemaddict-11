@@ -1,4 +1,4 @@
-import createCardsList from "./cardslist.js";
+import createCardsList from "../filmcard/cardslist.js";
 import createMoreButton from "./more-button.js";
 
 export const createFilmsList = (movies) => {

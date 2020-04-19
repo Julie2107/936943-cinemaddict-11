@@ -1,10 +1,10 @@
-import {createDetailsPoster} from "./film-details/details-poster.js";
-import {createDetailsHead} from "./film-details/details-head.js";
-import {createDetailsTable} from "./film-details/details-table.js";
-import {createDetailsDesc} from "./film-details/details-desc.js";
-import {createDetailsControls} from "./film-details/details-controls.js";
-import {createDetailsCommentsList} from "./film-details/comments.js";
-import {createDetailsNewComment} from "./film-details/comment-new.js";
+import {createDetailsPoster} from "./details-poster.js";
+import {createDetailsHead} from "./details-head.js";
+import {createDetailsTable} from "./details-table.js";
+import {createDetailsDesc} from "./details-desc.js";
+import {createDetailsControls} from "./details-controls.js";
+import {createDetailsCommentsList} from "./comments.js";
+import {createDetailsNewComment} from "./comment-new.js";
 
 const createFilmDetails = (movie) => {
   return (
