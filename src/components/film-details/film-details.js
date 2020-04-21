@@ -5,6 +5,7 @@ import {createDetailsDesc} from "./details-desc.js";
 import {createDetailsControls} from "./details-controls.js";
 import {createDetailsCommentsList} from "./comments.js";
 import {createDetailsNewComment} from "./comment-new.js";
+import {createElement} from "../utils.js";
 
 const createFilmDetails = (movie) => {
   return (
@@ -38,4 +39,25 @@ const createFilmDetails = (movie) => {
   );
 };
 
-export default createFilmDetails;
+export default class FilmDetails {
+  constructor(movies) {
+    this._movies = movies;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetails(this._movies);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

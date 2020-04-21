@@ -1,16 +1,29 @@
-import {createFilmsList} from "./films-list.js";
-import {createMostCommented} from "./most-commented.js";
-import {createTopRated} from "./top-rated.js";
+import {createElement} from "../utils.js";
 
-
-const createFilmBlock = (movies, toprated, commented) => {
+const createFilmBlock = () => {
   return (
     `<section class="films">
-    ${createFilmsList(movies)}
-    ${createTopRated(toprated)}
-    ${createMostCommented(commented)}
     </section>`
   );
 };
 
-export default createFilmBlock;
+export default class FilmBlock {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmBlock();
+  }
+
+  getElement() {
+    if (!this._element) {
+    this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

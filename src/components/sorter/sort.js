@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const createSort = () => {
   return (
     `<ul class="sort">
@@ -8,4 +10,23 @@ const createSort = () => {
   );
 };
 
-export default createSort;
+export default class Sort {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSort();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

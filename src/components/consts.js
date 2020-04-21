@@ -7,3 +7,8 @@ export const Position = {
   AFTEREND: `afterend`,
   AFTERBEGIN: `afterbegin`
 };
+
+export const ExtraTitle = {
+  TOPRATED: `Top rated`,
+  COMMENTED: `Most commented`
+};
