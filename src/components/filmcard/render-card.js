@@ -1,5 +1,4 @@
 import CardComponent from "./card.js";
-import FilmDetailsComponent from "../film-details/film-details.js";
 
 import {renderMovie} from "../film-details/render-movie.js";
 import {render} from "../utils.js";
@@ -7,7 +6,6 @@ import {render} from "../utils.js";
 const footer = document.querySelector(`.footer`);
 
 const openFilmDetailsHandler = (movie) => {
-  const filmDetailsBlock = new FilmDetailsComponent(movie);
   renderMovie(footer, movie);
 };
 
