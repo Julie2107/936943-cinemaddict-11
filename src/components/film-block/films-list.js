@@ -14,9 +14,7 @@ const createFilmsList = () => {
 };
 
 export default class FilmsList {
-  constructor(movies) {
-    this._movies = movies;
-
+  constructor() {
     this._element = null;
   }
 
