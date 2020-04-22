@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const createNavItem = (filter) => {
   return (
     `<a href="#${filter.name.toLowerCase()}" class="main-navigation__item">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`
@@ -21,4 +23,25 @@ const createNavigation = (filters) => {
   );
 };
 
-export default createNavigation;
+export default class Menu {
+  constructor(filters) {
+    this._filters = filters;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createNavigation(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,4 +1,6 @@
 const DESC_CAPACITY = 139;
+import {createElement} from "../utils.js";
+
 
 const createCard = (movie) => {
   const isTooLong = movie.description.length >= DESC_CAPACITY ? `${movie.description.slice(0, DESC_CAPACITY)}...` : `${movie.description}`;
@@ -23,4 +25,25 @@ const createCard = (movie) => {
   );
 };
 
-export default createCard;
+export default class Card {
+  constructor(movie) {
+    this._movie = movie;
+
+    this.element = null;
+  }
+
+  getTemplate() {
+    return createCard(this._movie);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

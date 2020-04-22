@@ -1,4 +1,5 @@
 import {generateUserRating} from "../mocks/profile.js";
+import {createElement} from "./utils.js";
 
 const createUserProfile = (watched) => {
   return (
@@ -9,4 +10,25 @@ const createUserProfile = (watched) => {
   );
 };
 
-export default createUserProfile;
+export default class Profile {
+  constructor(watched) {
+    this._watched = watched;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createUserProfile(this._watched);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

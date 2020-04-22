@@ -1,25 +1,23 @@
-import createMoreButton from "./more-button.js";
 import {createElement} from "../utils.js";
 
-const createFilmsList = () => {
+const createFilmsListExtra = (title) => {
   return (
-    `<section class="films-list">
-      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-
+    `<section class="films-list--extra">
+      <h2 class="films-list__title">${title}</h2>
       <div class="films-list__container">
       </div>
-      ${createMoreButton()}
     </section>`
   );
 };
 
-export default class FilmsList {
-  constructor() {
+export default class FilmsListExtra {
+  constructor(title) {
+    this._title = title;
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmsList(this._movies);
+    return createFilmsListExtra(this._title);
   }
 
   getElement() {

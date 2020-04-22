@@ -1,7 +1,26 @@
 import {Position} from "./consts.js";
 
-export const isDouble = (num) => num > 9 ? `${num}` : `0${num}`;
+const DECIMAL = 10;
 
-export const render = (container, template, place = Position.BEFOREEND) => {
-  container.insertAdjacentHTML(place, template);
+export const isDouble = (num) => num >= DECIMAL ? `${num}` : `0${num}`;
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export const render = (container, element, place = Position.BEFOREEND) => {
+  switch (place) {
+    case Position.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case Position.BEFOREEND:
+      container.append(element);
+      break;
+    case Position.AFTEREND:
+      container.after(element);
+      break;
+  }
 };
