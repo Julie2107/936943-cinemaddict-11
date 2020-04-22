@@ -4,7 +4,6 @@ import {render, escKeyHandler} from "../utils.js";
 
 const closeBtnHandler = (block) => {
   document.body.removeChild(block.getElement());
-
 };
 
 export const renderMovie = (container, movie) => {
@@ -20,7 +19,7 @@ export const renderMovie = (container, movie) => {
 
   document.addEventListener(`keydown`, (evt) => {
     escKeyHandler(evt, () => {
-      closeBtnHandler(filmDetailsBlock)
+      closeBtnHandler(filmDetailsBlock);
     });
   });
 };

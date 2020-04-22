@@ -3,7 +3,7 @@ import {Position, EscKeys} from "./consts.js";
 const DECIMAL = 10;
 
 export const escKeyHandler = (evt, action) => {
-  const isEscKey = (evt) => evt.key === EscKeys.ESCAPE || evt.key === EscKeys.ESC;
+  const isEscKey = evt.key === EscKeys.ESCAPE || evt.key === EscKeys.ESC;
   if (isEscKey) {
     action();
     document.removeEventListener(`keydown`, escKeyHandler);
