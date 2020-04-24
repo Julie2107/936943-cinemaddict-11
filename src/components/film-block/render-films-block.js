@@ -2,6 +2,7 @@ import {CARDS_AMOUNT_RENDER, CARDS_AMOUNT_EXTRA, ExtraTitle} from "../consts.js"
 import FilmBlockComponent from "./film-block.js";
 import FilmsListComponent from "./films-list.js";
 import FilmsExtraComponent from "./films-list-extra.js";
+import NoFilmsComponent from "./no-films.js";
 import {renderCard} from "../filmcard/render-card.js";
 import {render} from "../utils.js";
 const main = document.querySelector(`.main`);
@@ -33,6 +34,10 @@ const getMoviesArrays = (movies) => {
 export const renderFilmsBlock = (movies) => {
   const filmsBlock = new FilmBlockComponent();
   render(main, filmsBlock.getElement());
+
+  if (movies.length === 0) {
+    render(filmsBlock.getElement(), new NoFilmsComponent().getElement());
+  }
   render(filmsBlock.getElement(), new FilmsListComponent().getElement());
 
   const filmsListBlock = filmsBlock.getElement().querySelector(`.films-list__container`);

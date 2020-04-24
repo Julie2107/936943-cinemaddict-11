@@ -1,6 +1,14 @@
-import {Position} from "./consts.js";
+import {Position, EscKeys} from "./consts.js";
 
 const DECIMAL = 10;
+
+export const escKeyHandler = (evt, action) => {
+  const isEscKey = evt.key === EscKeys.ESCAPE || evt.key === EscKeys.ESC;
+  if (isEscKey) {
+    action();
+    document.removeEventListener(`keydown`, escKeyHandler);
+  }
+};
 
 export const isDouble = (num) => num >= DECIMAL ? `${num}` : `0${num}`;
 

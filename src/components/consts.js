@@ -12,3 +12,8 @@ export const ExtraTitle = {
   TOPRATED: `Top rated`,
   COMMENTED: `Most commented`
 };
+
+export const EscKeys = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`
+};
