@@ -1,5 +1,4 @@
-import createMoreButton from "./more-button.js";
-import {createElement} from "../utils.js";
+import AbstractComponent from "../abstract-component.js";
 
 const createFilmsList = () => {
   return (
@@ -8,28 +7,12 @@ const createFilmsList = () => {
 
       <div class="films-list__container">
       </div>
-      ${createMoreButton()}
     </section>`
   );
 };
 
-export default class FilmsList {
-  constructor() {
-    this._element = null;
-  }
-
+export default class FilmsList extends AbstractComponent {
   getTemplate() {
     return createFilmsList(this._movies);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

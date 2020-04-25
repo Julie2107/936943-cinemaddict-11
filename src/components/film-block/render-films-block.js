@@ -1,8 +1,9 @@
-import {CARDS_AMOUNT_RENDER, CARDS_AMOUNT_EXTRA, ExtraTitle} from "../consts.js";
+import {CARDS_AMOUNT_RENDER, CARDS_AMOUNT_EXTRA, ExtraTitle, Position} from "../consts.js";
 import FilmBlockComponent from "./film-block.js";
 import FilmsListComponent from "./films-list.js";
 import FilmsExtraComponent from "./films-list-extra.js";
 import NoFilmsComponent from "./no-films.js";
+import MoreButtonComponent from "./more-button.js";
 import {renderCard} from "../filmcard/render-card.js";
 import {render} from "../utils.js";
 const main = document.querySelector(`.main`);
@@ -43,6 +44,8 @@ export const renderFilmsBlock = (movies) => {
   const filmsListBlock = filmsBlock.getElement().querySelector(`.films-list__container`);
 
   renderCardsList(getMoviesArrays(movies).moviesFirst, filmsListBlock);
+
+  render(filmsListBlock, new MoreButtonComponent().getElement(), Position.AFTEREND);
 
   const topratedBlock = new FilmsExtraComponent(ExtraTitle.TOPRATED).getElement();
 
