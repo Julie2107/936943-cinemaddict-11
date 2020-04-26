@@ -24,7 +24,7 @@ const createCard = (movie) => {
   );
 };
 
-export default class Card extends AbstractComponent{
+export default class Card extends AbstractComponent {
   constructor(movie) {
     super();
     this._movie = movie;
@@ -32,5 +32,9 @@ export default class Card extends AbstractComponent{
 
   getTemplate() {
     return createCard(this._movie);
+  }
+
+  setDetailsHandler(selector, handler) {
+    this.getElement().querySelector(selector).addEventListener(`click`, handler);
   }
 }

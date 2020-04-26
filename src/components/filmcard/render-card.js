@@ -11,19 +11,17 @@ const openFilmDetailsHandler = (movie) => {
 
 export const renderCard = (filmsListElement, movie) => {
   const cardComponent = new CardComponent(movie);
-  render(filmsListElement, cardComponent.getElement());
+  render(filmsListElement, cardComponent);
 
-  const poster = cardComponent.getElement().querySelector(`.film-card__poster`);
-  const title = cardComponent.getElement().querySelector(`.film-card__title`);
-  const comments = cardComponent.getElement().querySelector(`.film-card__comments`);
-
-  poster.addEventListener(`click`, () => {
+  cardComponent.setDetailsHandler(`.film-card__poster`, () => {
     openFilmDetailsHandler(movie);
   });
-  title.addEventListener(`click`, () => {
+
+  cardComponent.setDetailsHandler(`.film-card__title`, () => {
     openFilmDetailsHandler(movie);
   });
-  comments.addEventListener(`click`, () => {
+
+  cardComponent.setDetailsHandler(`.film-card__comments`, () => {
     openFilmDetailsHandler(movie);
   });
 };
