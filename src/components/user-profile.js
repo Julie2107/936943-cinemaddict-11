@@ -1,5 +1,5 @@
 import {generateUserRating} from "../mocks/profile.js";
-import {createElement} from "./utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createUserProfile = (watched) => {
   return (
@@ -10,25 +10,13 @@ const createUserProfile = (watched) => {
   );
 };
 
-export default class Profile {
+export default class Profile extends AbstractComponent {
   constructor(watched) {
+    super();
     this._watched = watched;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createUserProfile(this._watched);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

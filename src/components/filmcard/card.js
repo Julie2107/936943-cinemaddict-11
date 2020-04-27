@@ -1,6 +1,5 @@
 const DESC_CAPACITY = 139;
-import {createElement} from "../utils.js";
-
+import AbstractComponent from "../abstract-component.js";
 
 const createCard = (movie) => {
   const isTooLong = movie.description.length >= DESC_CAPACITY ? `${movie.description.slice(0, DESC_CAPACITY)}...` : `${movie.description}`;
@@ -25,25 +24,17 @@ const createCard = (movie) => {
   );
 };
 
-export default class Card {
+export default class Card extends AbstractComponent {
   constructor(movie) {
+    super();
     this._movie = movie;
-
-    this.element = null;
   }
 
   getTemplate() {
     return createCard(this._movie);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setDetailsHandler(selector, handler) {
+    this.getElement().querySelector(selector).addEventListener(`click`, handler);
   }
 }

@@ -1,20 +1,18 @@
 import FilmDetailsComponent from "./film-details.js";
 import {Position} from "../consts.js";
-import {render, escKeyHandler} from "../utils.js";
+import {render, escKeyHandler, remove} from "../utils.js";
 
 const closeBtnHandler = (block) => {
-  document.body.removeChild(block.getElement());
+  remove(block);
+  document.removeEventListener(`keydown`, escKeyHandler);
 };
 
 export const renderMovie = (container, movie) => {
   const filmDetailsBlock = new FilmDetailsComponent(movie);
-  render(container, filmDetailsBlock.getElement(), Position.AFTEREND);
+  render(container, filmDetailsBlock, Position.AFTEREND);
 
-  const closeBtn = filmDetailsBlock.getElement().querySelector(`.film-details__close-btn`);
-
-  closeBtn.addEventListener(`click`, () => {
+  filmDetailsBlock.setCloseButtonHandler(() => {
     closeBtnHandler(filmDetailsBlock);
-    document.removeEventListener(`keydown`, escKeyHandler);
   });
 
   document.addEventListener(`keydown`, (evt) => {
