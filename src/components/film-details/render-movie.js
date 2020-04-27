@@ -1,9 +1,9 @@
 import FilmDetailsComponent from "./film-details.js";
 import {Position} from "../consts.js";
-import {render, escKeyHandler} from "../utils.js";
+import {render, escKeyHandler, remove} from "../utils.js";
 
 const closeBtnHandler = (block) => {
-  document.body.removeChild(block.getElement());
+  remove(block);
   document.removeEventListener(`keydown`, escKeyHandler);
 };
 

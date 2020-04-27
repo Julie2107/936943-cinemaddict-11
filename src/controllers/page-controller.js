@@ -40,6 +40,14 @@ export default class PageController {
     this._moreButtonComponent = new MoreButtonComponent();
   }
 
+  renderShowMoreBtn(block, movies) {
+    render(block, this._moreButtonComponent, Position.AFTEREND);
+    this._moreButtonComponent.setShowMoreHandler(() => {
+      showMoreHandler(block, movies, this._moreButtonComponent);
+    });
+
+  }
+
   render(movies) {
     const container = this._container.getElement();
     const moviesArrays = getMoviesArrays(movies);
@@ -52,16 +60,13 @@ export default class PageController {
     const filmsListBlock = container.querySelector(`.films-list__container`);
 
     renderCardsList(moviesArrays.moviesFirst, filmsListBlock);
-    render(filmsListBlock, this._moreButtonComponent, Position.AFTEREND);
+
+    this.renderShowMoreBtn(filmsListBlock, movies);
 
     render(container, this._filmsTopComponent);
     renderCardsList(moviesArrays.moviesTop, this._filmsTopComponent.getElement().querySelector(`.films-list__container`));
 
     render(container, this._filmsCommentedComponent);
     renderCardsList(moviesArrays.moviesCommented, this._filmsCommentedComponent.getElement().querySelector(`.films-list__container`));
-
-    this._moreButtonComponent.setShowMoreHandler(() => {
-      showMoreHandler(filmsListBlock, movies, this._moreButtonComponent);
-    });
   }
 }
