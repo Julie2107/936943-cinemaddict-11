@@ -30,6 +30,9 @@ export const render = (container, component, place = Position.BEFOREEND) => {
     case Position.AFTEREND:
       container.after(component.getElement());
       break;
+    case Position.BEFOREBEGIN:
+      container.before(component.getElement());
+      break;
   }
 };
 
