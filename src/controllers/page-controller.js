@@ -48,6 +48,16 @@ export default class PageController {
 
   }
 
+  renderTopFilms(container, movies) {
+    render(container, this._filmsTopComponent);
+    renderCardsList(movies, this._filmsTopComponent.getElement().querySelector(`.films-list__container`));
+  }
+
+  renderCommentedFilms(container, movies) {
+    render(container, this._filmsCommentedComponent);
+    renderCardsList(movies, this._filmsCommentedComponent.getElement().querySelector(`.films-list__container`));
+  }
+
   render(movies) {
     const container = this._container.getElement();
     const moviesArrays = getMoviesArrays(movies);
@@ -57,16 +67,14 @@ export default class PageController {
     }
     render(container, this._filmsListComponent);
 
+    //this.renderFilmsBlock(container, moviesArrays.moviesFirst);
     const filmsListBlock = container.querySelector(`.films-list__container`);
 
     renderCardsList(moviesArrays.moviesFirst, filmsListBlock);
-
     this.renderShowMoreBtn(filmsListBlock, movies);
 
-    render(container, this._filmsTopComponent);
-    renderCardsList(moviesArrays.moviesTop, this._filmsTopComponent.getElement().querySelector(`.films-list__container`));
+    this.renderTopFilms(container, moviesArrays.moviesTop);
 
-    render(container, this._filmsCommentedComponent);
-    renderCardsList(moviesArrays.moviesCommented, this._filmsCommentedComponent.getElement().querySelector(`.films-list__container`));
+    this.renderCommentedFilms(container, moviesArrays.moviesCommented);
   }
 }
