@@ -23,21 +23,27 @@ const showMoreHandler = (block, movies, button) => {
     remove(button);
   }
 };
-
-const getMoviesArrays = (movies) => {
+/*
+const moviesForRenders = (movies) => {
   return {
     moviesFirst: movies.slice(0, CARDS_AMOUNT_RENDER),
     moviesTop: [...movies].sort((prevMovie, nextMovie) => nextMovie.rating - prevMovie.rating).slice(0, CARDS_AMOUNT_EXTRA),
     moviesCommented: [...movies].sort((prevMovie, nextMovie) => nextMovie.comments.length - prevMovie.comments.length).slice(0, CARDS_AMOUNT_EXTRA)
   };
+};*/
+
+const moviesForRender = {
+  moviesFirst: (movies) => movies.slice(0, CARDS_AMOUNT_RENDER),
+
+  moviesTop: (movies) => [...movies].sort((prevMovie, nextMovie) => nextMovie.rating - prevMovie.rating).slice(0, CARDS_AMOUNT_EXTRA),
+
+  moviesCommented: (movies) => [...movies].sort((prevMovie, nextMovie) => nextMovie.comments.length - prevMovie.comments.length).slice(0, CARDS_AMOUNT_EXTRA)
 };
 
-const getSortedMovies = (movies) => {
-  return {
-    'rating': [...movies].sort((prevMovie, nextMovie) => nextMovie.rating - prevMovie.rating),
-    'date': [...movies].sort((currentMovie, nextMovie) => nextMovie.releasedate.year - currentMovie.releasedate.year),
-    'default': movies
-  };
+const sortMovies = {
+  'rating': (movies) => [...movies].sort((prevMovie, nextMovie) => nextMovie.rating - prevMovie.rating),
+  'date': (movies) => [...movies].sort((currentMovie, nextMovie) => nextMovie.releasedate.year - currentMovie.releasedate.year),
+  'default': (movies) => movies
 };
 
 export default class PageController {
@@ -52,7 +58,7 @@ export default class PageController {
     this._moreButtonComponent = new MoreButtonComponent();
   }
 
-  renderShowMoreBtn(block, movies) {
+  _renderShowMoreBtn(block, movies) {
     if (this._moreButtonComponent.getElement()) {
       remove(this._moreButtonComponent);
     }
@@ -62,42 +68,46 @@ export default class PageController {
     });
   }
 
-  renderTopFilms(container, movies) {
+  _renderTopFilms(container, movies) {
     render(container, this._filmsTopComponent);
     renderCardsList(movies, this._filmsTopComponent.getElement().querySelector(`.films-list__container`));
   }
 
-  renderCommentedFilms(container, movies) {
+  _renderCommentedFilms(container, movies) {
     render(container, this._filmsCommentedComponent);
     renderCardsList(movies, this._filmsCommentedComponent.getElement().querySelector(`.films-list__container`));
   }
 
-  render(movies) {
+  _getSortHandler(sortType, movies, block) {
+    const sortedMovies = sortMovies[sortType](movies);
+
+    block.innerHTML = ``;
+
+    renderCardsList(moviesForRender.moviesFirst(sortedMovies), block);
+
+    this._renderShowMoreBtn(block, sortedMovies);
+  }
+
+   render(movies) {
     const container = this._container;
-    const moviesArrays = getMoviesArrays(movies);
     render(container, this._filmsBlockComponent);
+
     const moviesContainer = this._filmsBlockComponent.getElement();
     if (movies.length === 0) {
       render(moviesContainer, this._noFilmsComponent);
     }
     render(moviesContainer, this._filmsListComponent);
     render(moviesContainer, this._sorterComponent, Position.BEFOREBEGIN);
+
     const filmsListBlock = moviesContainer.querySelector(`.films-list__container`);
-    renderCardsList(moviesArrays.moviesFirst, filmsListBlock);
-    this.renderShowMoreBtn(filmsListBlock, movies);
+    renderCardsList(moviesForRender.moviesFirst(movies), filmsListBlock);
+    this._renderShowMoreBtn(filmsListBlock, movies);
 
-    this.renderTopFilms(moviesContainer, moviesArrays.moviesTop);
+    this._renderTopFilms(moviesContainer, moviesForRender.moviesTop(movies));
 
-    this.renderCommentedFilms(moviesContainer, moviesArrays.moviesCommented);
+    this._renderCommentedFilms(moviesContainer, moviesForRender.moviesCommented(movies));
 
-    this._sorterComponent.setSortTypeChangeHandler((sortType) => {
-      const sortedMovies = getSortedMovies(movies)[sortType];
-
-      filmsListBlock.innerHTML = ``;
-
-      renderCardsList(getMoviesArrays(sortedMovies).moviesFirst, filmsListBlock);
-
-      this.renderShowMoreBtn(filmsListBlock, sortedMovies);
-    });
+    this._sorterComponent.setSortTypeChangeHandler((sortType) => this._getSortHandler(sortType, movies, filmsListBlock)
+    );
   }
 }
