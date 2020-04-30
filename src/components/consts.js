@@ -5,7 +5,8 @@ export const CARDS_AMOUNT_RENDER = 5;
 export const Position = {
   BEFOREEND: `beforeend`,
   AFTEREND: `afterend`,
-  AFTERBEGIN: `afterbegin`
+  AFTERBEGIN: `afterbegin`,
+  BEFOREBEGIN: `beforebegin`
 };
 
 export const ExtraTitle = {
