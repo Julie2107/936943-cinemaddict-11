@@ -112,8 +112,8 @@ export default class PageController {
   _showMoreHandler(block, movies, button) {
     const loadedCards = block.querySelectorAll(`article`);
     const nextLoading = loadedCards.length + CARDS_AMOUNT_RENDER;
-    renderCardsList(movies.slice(loadedCards.length, nextLoading), block, this._onDataChange, this._onViewChange);
-
+    const newCards = renderCardsList(movies.slice(loadedCards.length, nextLoading), block, this._onDataChange, this._onViewChange);
+    this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
     if (nextLoading >= this._movies.length) {
       remove(button);
     }
@@ -127,7 +127,7 @@ export default class PageController {
     }
 
     this._movies = [].concat(this._movies.slice(0, index), newData, this._movies.slice(index + 1));
-
+    console.log(oldData, newData);
     movieController.render(this._movies[index]);
   }
 

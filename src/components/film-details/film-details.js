@@ -43,7 +43,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
-    this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
+   // this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
   }
 
   getTemplate() {
@@ -51,8 +51,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this._subscribeOnEvents.bind(this);
-
     this._subscribeOnEvents();
   }
 

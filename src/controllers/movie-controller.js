@@ -51,26 +51,48 @@ export default class MovieController {
       this._openFilmDetailsHandler(movie);
     });
 
-    this._setDataChangeHandler(this._cardComponent, movie);
+    this._setDataChangeCardHandler(movie);
   }
 
-  _setDataChangeHandler(component, movie) {
-    component.setFavoritesClickHandler((evt) => {
+
+
+  _setDataChangeCardHandler(movie) {
+    this._cardComponent.setFavoritesClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isFavorite: !movie.isFavorite,
       }));
     });
 
-    component.setInWatchlistClickHandler((evt) => {
+    this._cardComponent.setInWatchlistClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isInWatchlist: !movie.isInWatchlist,
       }));
     });
 
-    component.setWatchedClickHandler((evt) => {
+    this._cardComponent.setWatchedClickHandler((evt) => {
       evt.preventDefault();
+      this._onDataChange(this, movie, Object.assign({}, movie, {
+        isWatched: !movie.isWatched,
+      }));
+    });
+  }
+
+  _setDataChangePopupHandler(movie) {
+    this._filmDetailsBlock.setFavoritesClickHandler((evt) => {
+      this._onDataChange(this, movie, Object.assign({}, movie, {
+        isFavorite: !movie.isFavorite,
+      }));
+    });
+
+    this._filmDetailsBlock.setInWatchlistClickHandler((evt) => {
+      this._onDataChange(this, movie, Object.assign({}, movie, {
+        isInWatchlist: !movie.isInWatchlist,
+      }));
+    });
+
+    this._filmDetailsBlock.setWatchedClickHandler((evt) => {
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isWatched: !movie.isWatched,
       }));
@@ -84,6 +106,12 @@ export default class MovieController {
 
   _renderMovie(movie) {
     const footer = document.querySelector(`.footer`);
+
+    /*const oldDetailsBlock = this._filmDetailsBlock;
+    this._filmDetailsBlock = new FilmDetailsComponent(movie);
+    if (oldDetailsBlock) {
+      oldDetailsBlock = this._filmDetailsBlock;
+    }*/
     render(footer, this._filmDetailsBlock, Position.AFTEREND);
     this._mode = Mode.DETAILS;
     this._filmDetailsBlock.setCloseButtonHandler(() => {
@@ -93,7 +121,7 @@ export default class MovieController {
       document.removeEventListener(`keydown`, this._escKeyHandler);
     });
 
-    this._setDataChangeHandler(this._filmDetailsBlock, movie);
+    this._setDataChangePopupHandler(movie);
 
     document.addEventListener(`keydown`, (evt) => {
       this._escKeyHandler(evt);
