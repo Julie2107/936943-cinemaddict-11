@@ -16,6 +16,7 @@ export default class CardControls extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
+    this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
   }
 
   getTemplate() {
@@ -50,14 +51,12 @@ export default class CardControls extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-card__controls-item--favorite`)
       .addEventListener(`click`, () => {
         this._isFavorite = !this._isFavorite;
-
         this.rerender();
       });
 
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
       .addEventListener(`click`, () => {
         this._isInWatchlist = !this._isInWatchlist;
-
         this.rerender();
       });
 
@@ -67,5 +66,5 @@ export default class CardControls extends AbstractSmartComponent {
 
         this.rerender();
       });
-    }
+  }
 }

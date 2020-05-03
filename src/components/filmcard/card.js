@@ -3,7 +3,6 @@ import AbstractSmartComponent from "../abstract-smart-component.js";
 
 
 const createCard = (movie) => {
-  const isChecked = (flag) => flag ? `film-card__controls-item--active` : ``;
 
   const isTooLong = movie.description.length >= DESC_CAPACITY ? `${movie.description.slice(0, DESC_CAPACITY)}...` : `${movie.description}`;
   return (

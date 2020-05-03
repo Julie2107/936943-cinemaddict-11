@@ -127,7 +127,6 @@ export default class PageController {
     }
 
     this._movies = [].concat(this._movies.slice(0, index), newData, this._movies.slice(index + 1));
-    console.log(oldData, newData);
     movieController.renderCardControls(this._movies[index]);
   }
 

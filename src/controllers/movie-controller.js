@@ -9,6 +9,7 @@ const Mode = {
   DEFAULT: `default`,
   DETAILS: `details`,
 };
+const footer = document.querySelector(`.footer`);
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -58,6 +59,7 @@ export default class MovieController {
   renderCardControls(movie) {
     const oldControls = this._cardControlsComponent;
     this._cardControlsComponent = new CardControlsComponent(movie);
+
     if (oldControls) {
       replace(this._cardControlsComponent, oldControls);
     }
@@ -90,19 +92,19 @@ export default class MovieController {
   }
 
   _setDataChangePopupHandler(movie) {
-    this._filmDetailsBlock.setFavoritesClickHandler((evt) => {
+    this._filmDetailsBlock.setFavoritesClickHandler(() => {
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isFavorite: !movie.isFavorite,
       }));
     });
 
-    this._filmDetailsBlock.setInWatchlistClickHandler((evt) => {
+    this._filmDetailsBlock.setInWatchlistClickHandler(() => {
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isInWatchlist: !movie.isInWatchlist,
       }));
     });
 
-    this._filmDetailsBlock.setWatchedClickHandler((evt) => {
+    this._filmDetailsBlock.setWatchedClickHandler(() => {
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isWatched: !movie.isWatched,
       }));
@@ -115,13 +117,7 @@ export default class MovieController {
   }
 
   _renderMovie(movie) {
-    const footer = document.querySelector(`.footer`);
 
-    /*const oldDetailsBlock = this._filmDetailsBlock;
-    this._filmDetailsBlock = new FilmDetailsComponent(movie);
-    if (oldDetailsBlock) {
-      oldDetailsBlock = this._filmDetailsBlock;
-    }*/
     render(footer, this._filmDetailsBlock, Position.AFTEREND);
     this._mode = Mode.DETAILS;
     this._filmDetailsBlock.setCloseButtonHandler(() => {
@@ -130,7 +126,6 @@ export default class MovieController {
 
       document.removeEventListener(`keydown`, this._escKeyHandler);
     });
-
     this._setDataChangePopupHandler(movie);
 
     document.addEventListener(`keydown`, (evt) => {

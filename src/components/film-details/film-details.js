@@ -43,7 +43,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
-   // this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
+    this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
   }
 
   getTemplate() {
@@ -75,10 +75,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   setWatchedClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`)
       .addEventListener(`click`, (handler));
-  }
-
-  setEmojiHandler(handler) {
-    this.getElement().querySelectorAll(`film-details__emoji-label`).addEventListener(`click`, (handler));
   }
 
   _subscribeOnEvents() {
