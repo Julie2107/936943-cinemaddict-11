@@ -1,5 +1,6 @@
 import CardComponent from "../components/filmcard/card.js";
 import FilmDetailsComponent from "../components/film-details/film-details.js";
+import CardControlsComponent from "../components/filmcard/card-controls.js";
 
 import {render, remove, replace} from "../components/utils.js";
 import {Position} from "../components/consts.js";
@@ -16,6 +17,7 @@ export default class MovieController {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._cardComponent = null;
+    this._cardControlsComponent = null;
     this._filmDetailsBlock = null;
     this._escKeyHandler = this._escKeyHandler.bind(this);
   }
@@ -38,9 +40,10 @@ export default class MovieController {
     } else {
       render(this._container, this._cardComponent);
     }
+
+    this.renderCardControls(movie);
     this._cardComponent.setDetailsHandler(`.film-card__poster`, () => {
       this._openFilmDetailsHandler(movie);
-
     });
 
     this._cardComponent.setDetailsHandler(`.film-card__title`, () => {
@@ -50,28 +53,35 @@ export default class MovieController {
     this._cardComponent.setDetailsHandler(`.film-card__comments`, () => {
       this._openFilmDetailsHandler(movie);
     });
-
-    this._setDataChangeCardHandler(movie);
   }
 
+  renderCardControls(movie) {
+    const oldControls = this._cardControlsComponent;
+    this._cardControlsComponent = new CardControlsComponent(movie);
+    if (oldControls) {
+      replace(this._cardControlsComponent, oldControls);
+    }
+    render(this._cardComponent.getElement(), this._cardControlsComponent);
+    this._setDataChangeCardHandler(movie);
 
+  }
 
   _setDataChangeCardHandler(movie) {
-    this._cardComponent.setFavoritesClickHandler((evt) => {
+    this._cardControlsComponent.setFavoritesClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isFavorite: !movie.isFavorite,
       }));
     });
 
-    this._cardComponent.setInWatchlistClickHandler((evt) => {
+    this._cardControlsComponent.setInWatchlistClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isInWatchlist: !movie.isInWatchlist,
       }));
     });
 
-    this._cardComponent.setWatchedClickHandler((evt) => {
+    this._cardControlsComponent.setWatchedClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isWatched: !movie.isWatched,

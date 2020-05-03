@@ -18,11 +18,6 @@ const createCard = (movie) => {
       <img src="./images/posters/${movie.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${isTooLong}</p>
       <a class="film-card__comments">${movie.comments.length} comments</a>
-      <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isChecked(movie.isInWatchlist)}">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isChecked(movie.isWatched)}">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite ${isChecked(movie.isFavorite)}">Mark as favorite</button>
-      </form>
     </article>`
   );
 };
@@ -37,55 +32,7 @@ export default class Card extends AbstractSmartComponent {
     return createCard(this._movie);
   }
 
-  recoveryListeners() {
-    this._subscribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
-  }
-
   setDetailsHandler(selector, handler) {
     this.getElement().querySelector(selector).addEventListener(`click`, handler);
   }
-
-  setFavoritesClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--favorite`)
-      .addEventListener(`click`, handler);
-  }
-
-  setInWatchlistClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
-      .addEventListener(`click`, handler);
-  }
-
-  setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
-      .addEventListener(`click`, handler);
-  }
-
-  _subscribeOnEvents() {
-
-    this.getElement().querySelector(`.film-card__controls-item--favorite`)
-      .addEventListener(`click`, () => {
-        this._isFavorite = !this._isFavorite;
-
-        this.rerender();
-      });
-
-    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
-      .addEventListener(`click`, () => {
-        this._isInWatchlist = !this._isInWatchlist;
-
-        this.rerender();
-      });
-
-    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
-      .addEventListener(`click`, () => {
-        this._isWatched = !this._isWatched;
-
-        this.rerender();
-      });
-  }
-
 }

@@ -128,7 +128,7 @@ export default class PageController {
 
     this._movies = [].concat(this._movies.slice(0, index), newData, this._movies.slice(index + 1));
     console.log(oldData, newData);
-    movieController.render(this._movies[index]);
+    movieController.renderCardControls(this._movies[index]);
   }
 
   _onViewChange() {
