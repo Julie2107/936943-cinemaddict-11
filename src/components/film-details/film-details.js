@@ -5,7 +5,7 @@ import {createDetailsDesc} from "./details-desc.js";
 import {createDetailsControls} from "./details-controls.js";
 import {createDetailsCommentsList} from "./comments.js";
 import {createDetailsNewComment} from "./comment-new.js";
-import AbstractComponent from "../abstract-component.js";
+import AbstractSmartComponent from "../abstract-smart-component.js";
 
 const createFilmDetails = (movie) => {
   return (
@@ -23,7 +23,7 @@ const createFilmDetails = (movie) => {
               ${createDetailsDesc(movie)}
             </div>
           </div>
-          ${createDetailsControls(movie.controls)}
+          ${createDetailsControls(movie)}
         </div>
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
@@ -39,17 +39,69 @@ const createFilmDetails = (movie) => {
   );
 };
 
-export default class FilmDetails extends AbstractComponent {
-  constructor(movies) {
+export default class FilmDetails extends AbstractSmartComponent {
+  constructor(movie) {
     super();
-    this._movies = movies;
+    this._movie = movie;
+    this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
   }
 
   getTemplate() {
-    return createFilmDetails(this._movies);
+    return createFilmDetails(this._movie);
+  }
+
+  recoveryListeners() {
+    this._subscribeOnEvents.bind(this);
+
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
   }
 
   setCloseButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+  }
+
+  setFavoritesClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, handler);
+  }
+
+  setInWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, handler);
+  }
+
+  setWatchedClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, (handler));
+  }
+
+  setEmojiHandler(handler) {
+    this.getElement().querySelectorAll(`film-details__emoji-label`).addEventListener(`click`, (handler));
+  }
+
+  _subscribeOnEvents() {
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, () => {
+        this._isFavorite = !this._isFavorite;
+
+        this.rerender();
+      });
+
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, () => {
+        this._isInWatchlist = !this._isInWatchlist;
+        this.rerender();
+      });
+
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, () => {
+        this._isWatched = !this._isWatched;
+
+        this.rerender();
+      });
   }
 }

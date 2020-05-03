@@ -110,11 +110,9 @@ const generateMovie = () => {
     description: generateMixture(DESCRIPTIONS, MAX_STRINGS_FIELD).join(` `),
 
     comments: generateComments(getRandomInteger(MAX_STRINGS_FIELD)),
-    controls: {
-      isInWatchlist: getRandomBoolean(),
-      isWatched: getRandomBoolean(),
-      isFavorite: getRandomBoolean(),
-    }
+    isInWatchlist: getRandomBoolean(),
+    isWatched: getRandomBoolean(),
+    isFavorite: getRandomBoolean(),
   };
 };
 
