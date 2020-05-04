@@ -21,6 +21,9 @@ export default class MovieController {
     this._cardControlsComponent = null;
     this._filmDetailsBlock = null;
     this._escKeyHandler = this._escKeyHandler.bind(this);
+    this._setDataChangePopupHandler = this._setDataChangePopupHandler.bind(this);
+    this._setDataChangeCardHandler = this._setDataChangeCardHandler.bind(this);
+
   }
 
   setDefaultView() {
@@ -42,7 +45,7 @@ export default class MovieController {
       render(this._container, this._cardComponent);
     }
 
-    this.renderCardControls(movie);
+    //this.renderCardControls(movie);
     this._cardComponent.setDetailsHandler(`.film-card__poster`, () => {
       this._openFilmDetailsHandler(movie);
     });
@@ -54,36 +57,41 @@ export default class MovieController {
     this._cardComponent.setDetailsHandler(`.film-card__comments`, () => {
       this._openFilmDetailsHandler(movie);
     });
+    this._setDataChangeCardHandler(movie);
   }
 
-  renderCardControls(movie) {
+  /*renderCardControls(movie) {
     const oldControls = this._cardControlsComponent;
     this._cardControlsComponent = new CardControlsComponent(movie);
+    const oldDetailsBlock = this._filmDetailsBlock;
+    this._filmDetailsBlock = new FilmDetailsComponent(movie);
 
     if (oldControls) {
       replace(this._cardControlsComponent, oldControls);
+      replace(this._filmDetailsBlock, oldDetailsBlock);
+
     }
     render(this._cardComponent.getElement(), this._cardControlsComponent);
     this._setDataChangeCardHandler(movie);
 
-  }
+  }*/
 
   _setDataChangeCardHandler(movie) {
-    this._cardControlsComponent.setFavoritesClickHandler((evt) => {
+    this._cardComponent.setFavoritesClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isFavorite: !movie.isFavorite,
       }));
     });
 
-    this._cardControlsComponent.setInWatchlistClickHandler((evt) => {
+    this._cardComponent.setInWatchlistClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isInWatchlist: !movie.isInWatchlist,
       }));
     });
 
-    this._cardControlsComponent.setWatchedClickHandler((evt) => {
+    this._cardComponent.setWatchedClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, movie, Object.assign({}, movie, {
         isWatched: !movie.isWatched,
@@ -117,8 +125,14 @@ export default class MovieController {
   }
 
   _renderMovie(movie) {
+    const oldDetailsBlock = this._filmDetailsBlock;
+    this._filmDetailsBlock = new FilmDetailsComponent(movie);
 
+    if (oldDetailsBlock) {
+      replace(this._filmDetailsBlock, oldDetailsBlock);
+    }
     render(footer, this._filmDetailsBlock, Position.AFTEREND);
+    this._filmDetailsBlock._subscribeOnEvents();
     this._mode = Mode.DETAILS;
     this._filmDetailsBlock.setCloseButtonHandler(() => {
       remove(this._filmDetailsBlock);
@@ -126,13 +140,8 @@ export default class MovieController {
 
       document.removeEventListener(`keydown`, this._escKeyHandler);
     });
-    this._setDataChangePopupHandler(movie);
-
-    document.addEventListener(`keydown`, (evt) => {
-      this._escKeyHandler(evt);
-    });
+   this._setDataChangePopupHandler(movie);
   }
-
   _escKeyHandler(evt) {
     if (evt.key === `Escape`) {
       remove(this._filmDetailsBlock);
