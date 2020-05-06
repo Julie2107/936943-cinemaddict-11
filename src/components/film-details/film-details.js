@@ -43,39 +43,57 @@ export default class FilmDetails extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
+
+  /*  this._setCloseButtonClickHandler = null;
+    this._setInWatchlistButtonClickHandler = null;
+    this._setWatchedButtonClickHandler = null;
+    this._setFavoritesButtonClickHandler = null;*/
   }
 
   getTemplate() {
     return createFilmDetails(this._movie);
   }
 
-  recoveryListeners() {
+  /* recoveryListeners() {
     this._subscribeOnEvents();
+    this.setCloseButtonHandler(this._setCloseButtonClickHandler);
+    this.setInWatchlistClickHandler(this._setInWatchlistButtonClickHandler);
+    this.setWatchedClickHandler(this._setWatchedButtonClickHandler);
+    this.setFavoritesClickHandler(this._setFavoritesButtonClickHandler);
   }
 
   rerender() {
     super.rerender();
-  }
+  } */
 
   setCloseButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+
+  //  this._setCloseButtonClickHandler = handler;
+  }
+
+  setInWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+    .addEventListener(`click`, handler);
+
+    // this._setInWatchlistButtonClickHandler = handler;
+  }
+
+  setWatchedClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+    .addEventListener(`click`, (handler));
+
+  //  this._setWatchedButtonClickHandler = handler;
   }
 
   setFavoritesClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, handler);
+
+    //  this._setFavoritesButtonClickHandler = handler;
   }
 
-  setInWatchlistClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, handler);
-  }
-
-  setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, (handler));
-  }
-
+/*
   _subscribeOnEvents() {
     this.getElement().querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, () => {
@@ -96,5 +114,5 @@ export default class FilmDetails extends AbstractSmartComponent {
 
         this.rerender();
       });
-  }
+  } */
 }

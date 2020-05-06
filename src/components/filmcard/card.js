@@ -64,6 +64,7 @@ export default class Card extends AbstractSmartComponent {
       .addEventListener(`click`, handler);
   }
 
+
   _subscribeOnEvents() {
 
     this.getElement().querySelector(`.film-card__controls-item--favorite`)

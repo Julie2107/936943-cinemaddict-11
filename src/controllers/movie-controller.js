@@ -1,6 +1,6 @@
 import CardComponent from "../components/filmcard/card.js";
 import FilmDetailsComponent from "../components/film-details/film-details.js";
-import CardControlsComponent from "../components/filmcard/card-controls.js";
+// import CardControlsComponent from "../components/filmcard/card-controls.js";
 
 import {render, remove, replace} from "../components/utils.js";
 import {Position} from "../components/consts.js";
@@ -18,34 +18,29 @@ export default class MovieController {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._cardComponent = null;
-    this._cardControlsComponent = null;
+    //  this._cardControlsComponent = null;
     this._filmDetailsBlock = null;
     this._escKeyHandler = this._escKeyHandler.bind(this);
-    this._setDataChangePopupHandler = this._setDataChangePopupHandler.bind(this);
-    this._setDataChangeCardHandler = this._setDataChangeCardHandler.bind(this);
+    // this._setDataChangePopupHandler = this._setDataChangePopupHandler.bind(this);
+    // this._setDataChangeCardHandler = this._setDataChangeCardHandler.bind(this);
+    this._openFilmDetailsHandler = this._openFilmDetailsHandler.bind(this);
+    this._closeDetailsHandler = this._closeDetailsHandler.bind(this);
 
   }
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
-      remove(this._filmDetailsBlock);
+      this._closeDetailsHandler();
     }
   }
 
   render(movie) {
     const oldCardComponent = this._cardComponent;
     this._cardComponent = new CardComponent(movie);
+
     const oldDetailsBlock = this._filmDetailsBlock;
     this._filmDetailsBlock = new FilmDetailsComponent(movie);
 
-    if (oldCardComponent && oldDetailsBlock) {
-      replace(this._cardComponent, oldCardComponent);
-      replace(this._filmDetailsBlock, oldDetailsBlock);
-    } else {
-      render(this._container, this._cardComponent);
-    }
-
-    //this.renderCardControls(movie);
     this._cardComponent.setDetailsHandler(`.film-card__poster`, () => {
       this._openFilmDetailsHandler(movie);
     });
@@ -58,9 +53,19 @@ export default class MovieController {
       this._openFilmDetailsHandler(movie);
     });
     this._setDataChangeCardHandler(movie);
+    this._setDataChangePopupHandler(movie);
+    this._filmDetailsBlock.setCloseButtonHandler(this._closeDetailsHandler);
+
+    if (oldCardComponent && oldDetailsBlock) {
+      replace(this._cardComponent, oldCardComponent);
+      replace(this._filmDetailsBlock, oldDetailsBlock);
+    } else {
+      render(this._container, this._cardComponent);
+    }
+    // this.renderCardControls(movie);
   }
 
-  /*renderCardControls(movie) {
+  /* renderCardControls(movie) {
     const oldControls = this._cardControlsComponent;
     this._cardControlsComponent = new CardControlsComponent(movie);
     const oldDetailsBlock = this._filmDetailsBlock;
@@ -122,26 +127,24 @@ export default class MovieController {
   _openFilmDetailsHandler(movie) {
     this._onViewChange();
     this._renderMovie(movie);
+    this._filmDetailsBlock.setCloseButtonHandler(this._closeDetailsHandler);
+    document.addEventListener(`keydown`, this._escKeyHandler);
   }
 
-  _renderMovie(movie) {
-    const oldDetailsBlock = this._filmDetailsBlock;
-    this._filmDetailsBlock = new FilmDetailsComponent(movie);
-
-    if (oldDetailsBlock) {
-      replace(this._filmDetailsBlock, oldDetailsBlock);
-    }
+  _renderMovie() {
     render(footer, this._filmDetailsBlock, Position.AFTEREND);
-    this._filmDetailsBlock._subscribeOnEvents();
+    // this._filmDetailsBlock._subscribeOnEvents();
     this._mode = Mode.DETAILS;
-    this._filmDetailsBlock.setCloseButtonHandler(() => {
-      remove(this._filmDetailsBlock);
-      this._mode = Mode.DEFAULT;
-
-      document.removeEventListener(`keydown`, this._escKeyHandler);
-    });
-   this._setDataChangePopupHandler(movie);
   }
+
+  _closeDetailsHandler() {
+    // remove(this._filmDetailsBlock);
+    this._filmDetailsBlock.getElement().remove();
+    this._mode = Mode.DEFAULT;
+
+    document.removeEventListener(`keydown`, this._escKeyHandler);
+  }
+
   _escKeyHandler(evt) {
     if (evt.key === `Escape`) {
       remove(this._filmDetailsBlock);
