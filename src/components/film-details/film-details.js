@@ -43,19 +43,22 @@ export default class FilmDetails extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
+    this._setEmojiClickButtonHandler = null;
 
-  /*  this._setCloseButtonClickHandler = null;
+    this._setCloseButtonClickHandler = null;
     this._setInWatchlistButtonClickHandler = null;
     this._setWatchedButtonClickHandler = null;
-    this._setFavoritesButtonClickHandler = null;*/
+    this._setFavoritesButtonClickHandler = null;
+    this._setEmojiClickButtonHandler = null;
   }
 
   getTemplate() {
     return createFilmDetails(this._movie);
   }
 
-  /* recoveryListeners() {
-    this._subscribeOnEvents();
+  recoveryListeners() {
+  //  this._subscribeOnEvents();
+    this.setEmojiClickHandler(this._setEmojiClickButtonHandler);
     this.setCloseButtonHandler(this._setCloseButtonClickHandler);
     this.setInWatchlistClickHandler(this._setInWatchlistButtonClickHandler);
     this.setWatchedClickHandler(this._setWatchedButtonClickHandler);
@@ -64,55 +67,46 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
-  } */
+  }
 
   setCloseButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
 
-  //  this._setCloseButtonClickHandler = handler;
+    this._setCloseButtonClickHandler = handler;
   }
 
   setInWatchlistClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`)
     .addEventListener(`click`, handler);
 
-    // this._setInWatchlistButtonClickHandler = handler;
+    this._setInWatchlistButtonClickHandler = handler;
   }
 
   setWatchedClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`)
     .addEventListener(`click`, (handler));
 
-  //  this._setWatchedButtonClickHandler = handler;
+    this._setWatchedButtonClickHandler = handler;
   }
 
   setFavoritesClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, handler);
 
-    //  this._setFavoritesButtonClickHandler = handler;
+    this._setFavoritesButtonClickHandler = handler;
   }
 
-/*
-  _subscribeOnEvents() {
-    this.getElement().querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, () => {
-        this._isFavorite = !this._isFavorite;
+  setEmojiClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__new-comment`)
+      .addEventListener(`change`, handler);
 
-        this.rerender();
-      });
+    this._setEmojiClickButtonHandler = handler;
+  }
 
-    this.getElement().querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, () => {
-        this._isInWatchlist = !this._isInWatchlist;
-        this.rerender();
-      });
-
-    this.getElement().querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, () => {
-        this._isWatched = !this._isWatched;
-
-        this.rerender();
-      });
-  } */
+  getEmojiElement(emoji) {
+    const emojiImage = document.createElement(`img`);
+    emojiImage.setAttribute(`src`, `./images/emoji/${emoji}.png`);
+    emojiImage.setAttribute(`width`, `100%`);
+    return emojiImage;
+  }
 }

@@ -55,7 +55,13 @@ export default class MovieController {
     this._setDataChangeCardHandler(movie);
     this._setDataChangePopupHandler(movie);
     this._filmDetailsBlock.setCloseButtonHandler(this._closeDetailsHandler);
-
+    this._filmDetailsBlock.setEmojiClickHandler((evt) => {
+      const emojiBlock = this._filmDetailsBlock.getElement().querySelector(`.film-details__add-emoji-label`);
+      if (emojiBlock.querySelector(`img`)) {
+        emojiBlock.querySelector(`img`).remove();
+      }
+      emojiBlock.append(this._filmDetailsBlock.getEmojiElement(evt.target.value));
+    });
     if (oldCardComponent && oldDetailsBlock) {
       replace(this._cardComponent, oldCardComponent);
       replace(this._filmDetailsBlock, oldDetailsBlock);
@@ -127,7 +133,7 @@ export default class MovieController {
   _openFilmDetailsHandler(movie) {
     this._onViewChange();
     this._renderMovie(movie);
-    this._filmDetailsBlock.setCloseButtonHandler(this._closeDetailsHandler);
+    this._filmDetailsBlock.rerender();
     document.addEventListener(`keydown`, this._escKeyHandler);
   }
 
