@@ -1,4 +1,6 @@
-const MONTHES = [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`];
+import moment from "moment";
+
+/* const MONTHES = [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`];*/
 
 export const getRandomDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
@@ -6,13 +8,12 @@ export const getRandomDate = (start, end) => {
 
 export const generateDate = (date) => {
   return {
-    day: date.getDate(),
-    month: MONTHES[date.getMonth()],
+    day: moment(date).format(`DD`),
+    month: moment(date).format(`MMMM`),
     integermonth: date.getMonth() + 1,
-    year: date.getFullYear(),
-
-    hours: date.getHours(),
-    minutes: date.getMinutes()
+    year: moment(date).format(`YYYY`),
+    hours: moment(date).format(`HH`),
+    minutes: moment(date).format(`MM`)
   };
 };
 

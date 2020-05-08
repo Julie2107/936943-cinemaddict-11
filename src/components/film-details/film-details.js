@@ -5,7 +5,7 @@ import {createDetailsDesc} from "./details-desc.js";
 import {createDetailsControls} from "./details-controls.js";
 import {createDetailsCommentsList} from "./comments.js";
 import {createDetailsNewComment} from "./comment-new.js";
-import AbstractComponent from "../abstract-component.js";
+import AbstractSmartComponent from "../abstract-smart-component.js";
 
 const createFilmDetails = (movie) => {
   return (
@@ -23,7 +23,7 @@ const createFilmDetails = (movie) => {
               ${createDetailsDesc(movie)}
             </div>
           </div>
-          ${createDetailsControls(movie.controls)}
+          ${createDetailsControls(movie)}
         </div>
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
@@ -39,17 +39,74 @@ const createFilmDetails = (movie) => {
   );
 };
 
-export default class FilmDetails extends AbstractComponent {
-  constructor(movies) {
+export default class FilmDetails extends AbstractSmartComponent {
+  constructor(movie) {
     super();
-    this._movies = movies;
+    this._movie = movie;
+    this._setEmojiClickButtonHandler = null;
+
+    this._setCloseButtonClickHandler = null;
+    this._setInWatchlistButtonClickHandler = null;
+    this._setWatchedButtonClickHandler = null;
+    this._setFavoritesButtonClickHandler = null;
+    this._setEmojiClickButtonHandler = null;
   }
 
   getTemplate() {
-    return createFilmDetails(this._movies);
+    return createFilmDetails(this._movie);
+  }
+
+  recoveryListeners() {
+  //  this._subscribeOnEvents();
+    this.setEmojiClickHandler(this._setEmojiClickButtonHandler);
+    this.setCloseButtonHandler(this._setCloseButtonClickHandler);
+    this.setInWatchlistClickHandler(this._setInWatchlistButtonClickHandler);
+    this.setWatchedClickHandler(this._setWatchedButtonClickHandler);
+    this.setFavoritesClickHandler(this._setFavoritesButtonClickHandler);
+  }
+
+  rerender() {
+    super.rerender();
   }
 
   setCloseButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+
+    this._setCloseButtonClickHandler = handler;
+  }
+
+  setInWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+    .addEventListener(`click`, handler);
+
+    this._setInWatchlistButtonClickHandler = handler;
+  }
+
+  setWatchedClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+    .addEventListener(`click`, (handler));
+
+    this._setWatchedButtonClickHandler = handler;
+  }
+
+  setFavoritesClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, handler);
+
+    this._setFavoritesButtonClickHandler = handler;
+  }
+
+  setEmojiClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__new-comment`)
+      .addEventListener(`change`, handler);
+
+    this._setEmojiClickButtonHandler = handler;
+  }
+
+  getEmojiElement(emoji) {
+    const emojiImage = document.createElement(`img`);
+    emojiImage.setAttribute(`src`, `./images/emoji/${emoji}.png`);
+    emojiImage.setAttribute(`width`, `100%`);
+    return emojiImage;
   }
 }

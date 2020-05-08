@@ -1,5 +1,5 @@
 const countFilter = (array, flag) => array.reduce((total, movie) => {
-  if (movie.controls[flag]) {
+  if (movie[flag]) {
     total++;
   }
   return total;
