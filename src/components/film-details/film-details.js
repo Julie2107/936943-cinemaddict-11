@@ -3,11 +3,16 @@ import {createDetailsHead} from "./details-head.js";
 import {createDetailsTable} from "./details-table.js";
 import {createDetailsDesc} from "./details-desc.js";
 import {createDetailsControls} from "./details-controls.js";
-import {createDetailsCommentsList} from "./comments.js";
+//import {createDetailsCommentsList} from "./comments.js";
 import {createDetailsNewComment} from "./comment-new.js";
 import AbstractSmartComponent from "../abstract-smart-component.js";
+import CommentComponent from "./comments.js";
 
-const createFilmDetails = (movie) => {
+const createCommentsList = (comments) => {
+  return comments.map((comment) => new CommentComponent(comment).getTemplate()).join(`\n`);
+}
+
+const createFilmDetails = (movie, commentsMarkup) => {
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -29,7 +34,7 @@ const createFilmDetails = (movie) => {
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${movie.comments.length}</span></h3>
             <ul class="film-details__comments-list">
-                    ${createDetailsCommentsList(movie.comments)}
+                    ${commentsMarkup}
             </ul>
             ${createDetailsNewComment()}
           </section>
@@ -43,6 +48,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
+    //this._comments = this._movie.comments;
     this._setEmojiClickButtonHandler = null;
 
     this._setCloseButtonClickHandler = null;
@@ -50,10 +56,12 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._setWatchedButtonClickHandler = null;
     this._setFavoritesButtonClickHandler = null;
     this._setEmojiClickButtonHandler = null;
+    this._setDeleteCommentBtnClickHanler = null;
   }
 
   getTemplate() {
-    return createFilmDetails(this._movie);
+    return createFilmDetails(this._movie, this._getCommentsTemplate(this._movie.comments));
+    console.log(this._getCommentsTemplate(this._movie.comments))
   }
 
   recoveryListeners() {
@@ -63,6 +71,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setInWatchlistClickHandler(this._setInWatchlistButtonClickHandler);
     this.setWatchedClickHandler(this._setWatchedButtonClickHandler);
     this.setFavoritesClickHandler(this._setFavoritesButtonClickHandler);
+    this.setDeleteCommentBtnHandler(this._setDeleteCommentBtnClickHanler);
   }
 
   rerender() {
@@ -96,6 +105,15 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._setFavoritesButtonClickHandler = handler;
   }
 
+  setDeleteCommentBtnHandler(handler) {
+    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+
+    Array.from(deleteButtons).forEach((button) => {
+      button.addEventListener(`click`, handler);
+    });
+    this._setDeleteCommentBtnClickHanler = handler;
+  }
+
   setEmojiClickHandler(handler) {
     this.getElement().querySelector(`.film-details__new-comment`)
       .addEventListener(`change`, handler);
@@ -108,5 +126,11 @@ export default class FilmDetails extends AbstractSmartComponent {
     emojiImage.setAttribute(`src`, `./images/emoji/${emoji}.png`);
     emojiImage.setAttribute(`width`, `100%`);
     return emojiImage;
+  }
+
+  _getCommentsTemplate(comments) {
+    return comments.map((comment) =>
+      new CommentComponent(comment).getTemplate())
+    .join(`\n`);
   }
 }

@@ -5,7 +5,7 @@ import SortComponent from "../components/sorter/sort.js";
 import FilmsExtraComponent from "../components/film-block/films-list-extra.js";
 import NoFilmsComponent from "../components/film-block/no-films.js";
 import MoreButtonComponent from "../components/film-block/more-button.js";
-import MovieController from "./movie-controller.js";
+import MovieController, {EmptyComment} from "./movie-controller.js";
 import {render, remove} from "../components/utils.js";
 
 const renderCardsList = (moviesArray, container, onDataChange, onViewChange) => {
@@ -46,10 +46,14 @@ export default class PageController {
     this._noFilmsComponent = new NoFilmsComponent();
     this._moreButtonComponent = new MoreButtonComponent();
     this._onDataChange = this._onDataChange.bind(this);
+  //  this._onCommentDataChange = this._onCommentDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
     this._getSortHandler = this._getSortHandler.bind(this);
+    this._showMoreHandler = this._showMoreHandler.bind(this);
 
     this._sorterComponent.setSortTypeChangeHandler(this._getSortHandler);
+    this._moviesModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -68,24 +72,31 @@ export default class PageController {
     /*const newCards = renderCardsList(moviesForRender.moviesFirst(movies), filmsListBlock, this._onDataChange, this._onViewChange);
     this._showedMovieControllers = this._showedMovieControllers.concat(newCards);*/
     this._renderMovies(movies);
-    this._renderShowMoreBtn(filmsListBlock, movies);
+    this._renderShowMoreBtn(movies);
     this._renderTopFilms(moviesContainer, moviesForRender.moviesTop(movies));
 
     this._renderCommentedFilms(moviesContainer, moviesForRender.moviesCommented(movies));
   }
 
-  _renderShowMoreBtn(block, movies) {
-    const loadedCards = block.querySelectorAll(`article`);
-    if (loadedCards.length >= this._moviesModel.getMovies().length) {
+  _renderShowMoreBtn(movies) {
+    const moviesContainer = this._filmsBlockComponent.getElement();
+    const filmsListBlock = moviesContainer.querySelector(`.films-list__container`);
+    const loadedCards = filmsListBlock.querySelectorAll(`article`);
+    if (loadedCards.length >= movies.length) {
       return;
     }
     if (this._moreButtonComponent.getElement()) {
       remove(this._moreButtonComponent);
     }
-    render(block, this._moreButtonComponent, Position.AFTEREND);
+    render(filmsListBlock, this._moreButtonComponent, Position.AFTEREND);
     this._moreButtonComponent.setShowMoreHandler(() => {
-      this._showMoreHandler(block, movies, this._moreButtonComponent);
+      this._showMoreHandler(filmsListBlock, movies, this._moreButtonComponent);
     });
+  }
+  // очищение борда
+  _removeMovies() {
+    this._showedMovieControllers.forEach((movieController) => movieController.destroy());
+    this._showedMovieControllers = [];
   }
 
   _renderMovies(movies) {
@@ -107,15 +118,23 @@ export default class PageController {
     const commentedCards = renderCardsList(movies, this._filmsCommentedComponent.getElement().querySelector(`.films-list__container`));
   }
 
+  _updateMovies(count) {
+    this._removeMovies();
+    this._renderMovies(this._moviesModel.getMovies());
+    this._renderShowMoreBtn(this._moviesModel.getMovies());
+  }
+
   _getSortHandler(sortType) {
     const sortedMovies = sortMovies[sortType](this._moviesModel.getMovies());
     const filmsListBlock = this._filmsBlockComponent.getElement().querySelector(`.films-list__container`);
 
-    filmsListBlock.innerHTML = ``;
-    const sortedCards = renderCardsList(moviesForRender.moviesFirst(sortedMovies), filmsListBlock, this._onDataChange, this._onViewChange);
-    this._showedMovieControllers = this._showedMovieControllers.concat(sortedCards);
+    this._removeMovies();
+    this._renderMovies(sortedMovies);
 
-    this._renderShowMoreBtn(filmsListBlock, sortedMovies);
+//    const sortedCards = renderCardsList(moviesForRender.moviesFirst(sortedMovies), filmsListBlock, this._onDataChange, this._onViewChange);
+//    this._showedMovieControllers = this._showedMovieControllers.concat(sortedCards);
+
+    this._renderShowMoreBtn(sortedMovies);
   }
 
   _showMoreHandler(block, movies, button) {
@@ -129,22 +148,41 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
+    console.log(oldData);
+    //обновление(кнопки контролов)
     const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
 
     if (isSuccess) {
       movieController.render(newData);
     }
-    /*const index = this._moviesModel.getMovies().findIndex((item) => item === oldData);
+  }
 
-    if (index === -1) {
-      return;
+  _onCommentDataChange(movieController, oldData, newData) {
+    //как получить текущий movie?
+    /*if (oldData === EmptyComment) {
+      this._creatingComment = null;
+      if (newData === null) {
+        this._updateMovies(CARDS_AMOUNT_RENDER);
+      } else {
+        this._moviesModel.addComment(newData);
+        movieController.render(newData);
+      }
+    } else if (newData === null) {
+      this._moviesModel.removeComment(oldData.id);
+      this._updateMovies(CARDS_AMOUNT_RENDER);
+    }*/
+    if (newData === null) {
+      this._moviesModel.removeComment(oldData.id, movie);
+    //  this._updateMovies(CARDS_AMOUNT_RENDER);
     }
 
-    this._movies = [].concat(this._moviesModel.getMovies().slice(0, index), newData, this._movies.slice(index + 1));
-    movieController.render(this._moviesModel.getMovies()[index]);*/
   }
 
   _onViewChange() {
     this._showedMovieControllers.forEach((item) => item.setDefaultView());
+  }
+
+  _onFilterChange() {
+    this._updateMovies(CARDS_AMOUNT_RENDER);
   }
 }

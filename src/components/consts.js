@@ -18,3 +18,10 @@ export const EscKeys = {
   ESCAPE: `Escape`,
   ESC: `Esc`
 };
+
+export const FilterType = {
+  ALL: `All movies`,
+  WATCHLIST: `Watchlist`,
+  HISTORY: `History`,
+  FAVORITES: `Favorites`
+};

@@ -11,12 +11,15 @@ const Mode = {
 };
 const footer = document.querySelector(`.footer`);
 
+export const EmptyComment = {};
+
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._mode = Mode.DEFAULT;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+  //  this._onCommentDataChange = onCommentDataChange;
     this._cardComponent = null;
     //  this._cardControlsComponent = null;
     this._filmDetailsBlock = null;
@@ -25,7 +28,8 @@ export default class MovieController {
     // this._setDataChangeCardHandler = this._setDataChangeCardHandler.bind(this);
     this._openFilmDetailsHandler = this._openFilmDetailsHandler.bind(this);
     this._closeDetailsHandler = this._closeDetailsHandler.bind(this);
-
+    this._setEmojiHandler = this._setEmojiHandler.bind(this);
+    this._deleteCommentHandler = this._deleteCommentHandler.bind(this);
   }
 
   setDefaultView() {
@@ -52,16 +56,19 @@ export default class MovieController {
     this._cardComponent.setDetailsHandler(`.film-card__comments`, () => {
       this._openFilmDetailsHandler(movie);
     });
+
     this._setDataChangeCardHandler(movie);
     this._setDataChangePopupHandler(movie);
     this._filmDetailsBlock.setCloseButtonHandler(this._closeDetailsHandler);
     this._filmDetailsBlock.setEmojiClickHandler((evt) => {
-      const emojiBlock = this._filmDetailsBlock.getElement().querySelector(`.film-details__add-emoji-label`);
-      if (emojiBlock.querySelector(`img`)) {
-        emojiBlock.querySelector(`img`).remove();
-      }
-      emojiBlock.append(this._filmDetailsBlock.getEmojiElement(evt.target.value));
+      this._setEmojiHandler(evt);
     });
+
+    this._filmDetailsBlock.setDeleteCommentBtnHandler((evt) => {
+      this._deleteCommentHandler(evt, movie);
+    })
+
+
     if (oldCardComponent && oldDetailsBlock) {
       replace(this._cardComponent, oldCardComponent);
       replace(this._filmDetailsBlock, oldDetailsBlock);
@@ -70,6 +77,7 @@ export default class MovieController {
     }
     // this.renderCardControls(movie);
   }
+
 
   /* renderCardControls(movie) {
     const oldControls = this._cardControlsComponent;
@@ -86,6 +94,12 @@ export default class MovieController {
     this._setDataChangeCardHandler(movie);
 
   }*/
+
+  destroy() {
+    remove(this._cardComponent);
+    remove(this._filmDetailsBlock);
+    document.removeEventListener(`keydown`, this._escKeyHandler);
+  }
 
   _setDataChangeCardHandler(movie) {
     this._cardComponent.setFavoritesClickHandler((evt) => {
@@ -137,6 +151,14 @@ export default class MovieController {
     document.addEventListener(`keydown`, this._escKeyHandler);
   }
 
+  _setEmojiHandler (evt) {
+    const emojiBlock = this._filmDetailsBlock.getElement().querySelector(`.film-details__add-emoji-label`);
+    if (emojiBlock.querySelector(`img`)) {
+      emojiBlock.querySelector(`img`).remove();
+    }
+    emojiBlock.append(this._filmDetailsBlock.getEmojiElement(evt.target.value));
+  }
+
   _renderMovie() {
     render(footer, this._filmDetailsBlock, Position.AFTEREND);
     // this._filmDetailsBlock._subscribeOnEvents();
@@ -157,5 +179,17 @@ export default class MovieController {
       this._mode = Mode.DEFAULT;
       document.removeEventListener(`keydown`, this._escKeyHandler);
     }
+  }
+
+  _deleteCommentHandler(evt, movie) {
+    evt.preventDefault();
+    const commentId = evt.target.closest(`.film-details__comment`).dataset.commentId;
+    evt.target.closest(`.film-details__comment`).remove();
+    const commentIndex = movie.comments.findIndex((comment) => String(comment.id) === commentId);
+    movie.comments.splice(commentIndex, 1);
+    /*const newCommentsData = movie.comments.filter((comment) => {
+      return String(comment.id) !== (commentId);
+    });*/
+    this._onDataChange(this, movie, Object.assign({}, movie, movie.comments));
   }
 }
