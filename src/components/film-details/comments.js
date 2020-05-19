@@ -1,9 +1,7 @@
-import {isDouble} from "../utils.js";
 import AbstractComponent from "../abstract-smart-component.js";
 
 
 const createDetailsComment = (comment) => {
-  const getCommentDate = (date) => `${date.year}/${isDouble(date.integermonth)}/${isDouble(date.day)} ${isDouble(date.hours)}:${isDouble(date.minutes)}`;
   return (
     `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -29,7 +27,7 @@ const createCommentsList = (commentsList, comment) => {
 export const createDetailsCommentsList = (comments) => comments.reduce(createCommentsList, ``);
 
 export default class Comment extends AbstractComponent {
-  constructor (comment) {
+  constructor(comment) {
     super();
     this._comment = comment;
   }

@@ -1,6 +1,6 @@
 import NavComponent from "../components/menu/navigation.js";
 import {FilterType} from "../components/consts.js";
-import {render, replace, Position} from "../components/utils.js";
+import {render, replace} from "../components/utils.js";
 
 export const filterMovies = {
   'All movies': (movies) => movies,
@@ -44,7 +44,7 @@ export default class FilterController {
       render(container, this._filterComponent);
     }
   }
-  //коллбэк на изменение фильтра
+  // коллбэк на изменение фильтра
   _onFilterChange(filterType) {
     this._moviesModel.setFilter(filterType);
     this._activeFilterType = filterType;

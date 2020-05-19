@@ -3,14 +3,9 @@ import {createDetailsHead} from "./details-head.js";
 import {createDetailsTable} from "./details-table.js";
 import {createDetailsDesc} from "./details-desc.js";
 import {createDetailsControls} from "./details-controls.js";
-//import {createDetailsCommentsList} from "./comments.js";
 import {createDetailsNewComment} from "./comment-new.js";
 import AbstractSmartComponent from "../abstract-smart-component.js";
 import CommentComponent from "./comments.js";
-
-const createCommentsList = (comments) => {
-  return comments.map((comment) => new CommentComponent(comment).getTemplate()).join(`\n`);
-}
 
 const createFilmDetails = (movie, commentsMarkup) => {
   return (
@@ -48,7 +43,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
-    //this._comments = this._movie.comments;
     this._setEmojiClickButtonHandler = null;
 
     this._setCloseButtonClickHandler = null;
@@ -62,7 +56,6 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   getTemplate() {
     return createFilmDetails(this._movie, this._getCommentsTemplate(this._movie.comments));
-    console.log(this._getCommentsTemplate(this._movie.comments))
   }
 
   recoveryListeners() {

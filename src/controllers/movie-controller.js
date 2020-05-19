@@ -3,8 +3,7 @@ import FilmDetailsComponent from "../components/film-details/film-details.js";
 import CommentComponent from "../components/film-details/comments.js";
 import {encode} from "he";
 // import CardControlsComponent from "../components/filmcard/card-controls.js";
-
-import {render, remove, replace, isDouble} from "../components/utils.js";
+import {render, remove, replace} from "../components/utils.js";
 import {generateDate} from "../mocks/mocks-utils.js";
 import {Position} from "../components/consts.js";
 
@@ -22,13 +21,10 @@ export default class MovieController {
     this._mode = Mode.DEFAULT;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-  //  this._onCommentDataChange = onCommentDataChange;
     this._cardComponent = null;
     //  this._cardControlsComponent = null;
     this._filmDetailsBlock = null;
     this._escKeyHandler = this._escKeyHandler.bind(this);
-    // this._setDataChangePopupHandler = this._setDataChangePopupHandler.bind(this);
-    // this._setDataChangeCardHandler = this._setDataChangeCardHandler.bind(this);
     this._openFilmDetailsHandler = this._openFilmDetailsHandler.bind(this);
     this._closeDetailsHandler = this._closeDetailsHandler.bind(this);
     this._setEmojiHandler = this._setEmojiHandler.bind(this);
@@ -84,7 +80,6 @@ export default class MovieController {
     }
     // this.renderCardControls(movie);
   }
-
 
   /* renderCardControls(movie) {
     const oldControls = this._cardControlsComponent;
@@ -158,7 +153,7 @@ export default class MovieController {
     document.addEventListener(`keydown`, this._escKeyHandler);
   }
 
-  _setEmojiHandler (evt) {
+  _setEmojiHandler(evt) {
     const emojiBlock = this._filmDetailsBlock.getElement().querySelector(`.film-details__add-emoji-label`);
     if (emojiBlock.querySelector(`img`)) {
       emojiBlock.querySelector(`img`).remove();
@@ -199,15 +194,16 @@ export default class MovieController {
   }
 
   _addCommentHandler(evt, movie) {
+
     if (evt.key === `Enter` && (evt.ctrlKey || evt.metaKey)) {
       const newCommentData = this._getNewCommentData(this._filmDetailsBlock.getElement().querySelector(`.film-details__new-comment`));
-      /*if (newCommentData.text === null) {
+      if (newCommentData === undefined) {
         this._filmDetailsBlock.getElement().querySelector(`.film-details__comment-input`).setCustomValidity(`Please complete all the fields`);
-      }*/
+        return;
+      }
 
       this._renderNewComment(newCommentData);
 
-      const commentIndex = movie.comments.findIndex((comment) => comment.id === newCommentData.id);
       movie.comments.splice(movie.comments.length, 0, newCommentData);
       this._onDataChange(this, movie, Object.assign({}, movie, movie.comments));
 
@@ -218,7 +214,7 @@ export default class MovieController {
     const newComment = new CommentComponent(newCommentData);
 
     render(this._filmDetailsBlock.getElement().querySelector(`.film-details__comments-list`), newComment);
-  };
+  }
 
   _getNewCommentData(commentblock) {
     return {
@@ -226,9 +222,7 @@ export default class MovieController {
       text: encode(commentblock.querySelector(`.film-details__comment-input`).value),
       emotion: commentblock.querySelector(`.film-details__emoji-item:checked`).value,
       author: `Cinemaddict`,
-      date: generateDate(new Date)
-    }
+      date: generateDate(new Date())
+    };
   }
-
-
 }

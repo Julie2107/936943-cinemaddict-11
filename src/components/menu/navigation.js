@@ -1,15 +1,8 @@
 import AbstractComponent from "../abstract-component.js";
 
-const FILTER_COUNT_STRING = ` 20`;
-
-const getFilterName = (content) => {
-  return content.substring(FILTER_ID_PREFIX.length);
-};
-
 const createNavItem = (filter) => {
-  const isActive = filter.checked ? `main-navigation__item--active` : ``;
   return (
-    `<a href="#${filter.name.toLowerCase()}" class="main-navigation__item" ${isActive} data-filter-type="${filter.name}">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`
+    `<a href="#${filter.name.toLowerCase()}" class="main-navigation__item" data-filter-type="${filter.name}">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`
   );
 };
 
@@ -43,8 +36,18 @@ export default class Menu extends AbstractComponent {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
       const filterName = evt.target.dataset.filterType;
-      console.log(evt.target.dataset);
+      this._setActiveClass(evt);
       handler(filterName);
+    });
+  }
+
+  _setActiveClass(evt) {
+    [...this.getElement().querySelectorAll(`.main-navigation__item`)].forEach((item) => {
+      if (evt.target === item) {
+        evt.target.classList.add(`main-navigation__item--active`);
+      } else {
+        item.classList.remove(`main-navigation__item--active`);
+      }
     });
   }
 }

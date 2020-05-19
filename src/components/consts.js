@@ -1,4 +1,4 @@
-export const CARDS_AMOUNT = 20;
+export const CARDS_AMOUNT = 10;
 export const CARDS_AMOUNT_EXTRA = 2;
 export const CARDS_AMOUNT_RENDER = 5;
 
