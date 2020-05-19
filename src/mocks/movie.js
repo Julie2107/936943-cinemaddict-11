@@ -95,6 +95,7 @@ const generateMovie = () => {
   const releaseDate = generateDate(getRandomDate(new Date(1921, 0, 1), new Date()));
 
   return {
+    id: String(Math.random()),
     title: NAMES[getRandomInteger(NAMES.length)],
     poster: POSTERS[getRandomInteger(POSTERS.length)],
     rating: generateRating(),

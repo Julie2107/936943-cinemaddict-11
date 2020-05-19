@@ -31,6 +31,11 @@ export default class Sort extends AbstractComponent {
     return this._currenSortType;
   }
 
+  resetSort() {
+    this._currenSortType = SortType.DEFAULT;
+    this._setActiveClass(this.getElement().querySelector(`.sort__button:first-child`));
+  }
+
   _sortHandler(handler) {
     return (evt) => {
       evt.preventDefault();
@@ -47,11 +52,22 @@ export default class Sort extends AbstractComponent {
 
       this._currenSortType = sortType;
 
+      this._setActiveClass(evt.target);
       handler(this._currenSortType);
     };
   }
 
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, this._sortHandler(handler));
+  }
+
+  _setActiveClass(target) {
+    [...this.getElement().querySelectorAll(`.sort__button`)].forEach((item) => {
+      if (target === item) {
+        target.classList.add(`sort__button--active`);
+      } else {
+        item.classList.remove(`sort__button--active`);
+      }
+    });
   }
 }

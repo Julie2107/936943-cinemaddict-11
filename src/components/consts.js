@@ -1,4 +1,4 @@
-export const CARDS_AMOUNT = 20;
+export const CARDS_AMOUNT = 10;
 export const CARDS_AMOUNT_EXTRA = 2;
 export const CARDS_AMOUNT_RENDER = 5;
 
@@ -17,4 +17,11 @@ export const ExtraTitle = {
 export const EscKeys = {
   ESCAPE: `Escape`,
   ESC: `Esc`
+};
+
+export const FilterType = {
+  ALL: `All movies`,
+  WATCHLIST: `Watchlist`,
+  HISTORY: `History`,
+  FAVORITES: `Favorites`
 };

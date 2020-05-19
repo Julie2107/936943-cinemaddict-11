@@ -13,6 +13,7 @@ const AUTHORS = [`John Doe`, `Tim Macoveev`, `Kisonka`, `Cinemaddict`];
 
 const generateComment = () => {
   return {
+    id: Math.random(),
     text: COMMENT_TEXTS[getRandomInteger(COMMENT_TEXTS.length)],
     emotion: EMOTIONS[getRandomInteger(EMOTIONS.length)],
     author: AUTHORS[getRandomInteger(AUTHORS.length)],
