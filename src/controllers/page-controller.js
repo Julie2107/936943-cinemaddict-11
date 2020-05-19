@@ -148,7 +148,7 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    console.log(oldData);
+    console.log(oldData, newData);
     //обновление(кнопки контролов)
     const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
 

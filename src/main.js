@@ -25,7 +25,6 @@ const init = () => {
   filterController.render();
   const countIsWatched = movies.filter((movie) => movie.isWatched).length;
   render(header, new ProfileComponent(countIsWatched));
-//  render(main, new MenuComponent(filters), Position.AFTERBEGIN);
   const pageController = new PageController(main, moviesModel);
   pageController.render();
   render(footerStatsBlock, new FooterStatsComponent(moviesModel.getMovies().length));

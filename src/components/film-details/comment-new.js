@@ -10,7 +10,7 @@ export const createDetailsNewComment = () => {
     `<div class="film-details__new-comment">
       <div for="add-emoji" class="film-details__add-emoji-label"></div>
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" required></textarea>
       </label>
       <div class="film-details__emoji-list">
         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${Emoji.SMILE}" value="${Emoji.SMILE}">

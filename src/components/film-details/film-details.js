@@ -57,6 +57,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._setFavoritesButtonClickHandler = null;
     this._setEmojiClickButtonHandler = null;
     this._setDeleteCommentBtnClickHanler = null;
+    this._addNewCommentHandler = null;
   }
 
   getTemplate() {
@@ -72,6 +73,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setWatchedClickHandler(this._setWatchedButtonClickHandler);
     this.setFavoritesClickHandler(this._setFavoritesButtonClickHandler);
     this.setDeleteCommentBtnHandler(this._setDeleteCommentBtnClickHanler);
+    this.setNewCommentHandler(this._addNewCommentHandler);
   }
 
   rerender() {
@@ -115,7 +117,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setEmojiClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__new-comment`)
+    this.getElement().querySelector(`.film-details__emoji-list`)
       .addEventListener(`change`, handler);
 
     this._setEmojiClickButtonHandler = handler;
@@ -126,6 +128,12 @@ export default class FilmDetails extends AbstractSmartComponent {
     emojiImage.setAttribute(`src`, `./images/emoji/${emoji}.png`);
     emojiImage.setAttribute(`width`, `100%`);
     return emojiImage;
+  }
+
+  setNewCommentHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, handler);
+
+    this._addNewCommentHandler = handler;
   }
 
   _getCommentsTemplate(comments) {

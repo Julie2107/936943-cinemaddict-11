@@ -35,7 +35,7 @@ export default class Comment extends AbstractComponent {
   }
 
   getTemplate() {
-    const getCommentDate = (date) => `${date.year}/${isDouble(date.integermonth)}/${isDouble(date.day)} ${isDouble(date.hours)}:${isDouble(date.minutes)}`;
+    const getCommentDate = (date) => `${date.year}/${date.integermonth}/${date.day} ${date.hours}:${date.minutes}`;
     return (
       `<li class="film-details__comment" data-comment-id="${this._comment.id}">
         <span class="film-details__comment-emoji">
@@ -45,7 +45,7 @@ export default class Comment extends AbstractComponent {
           <p class="film-details__comment-text">${this._comment.text}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${this._comment.author}</span>
-            <span class="film-details__comment-day">${this._comment.date}</span>
+            <span class="film-details__comment-day">${getCommentDate(this._comment.date)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
