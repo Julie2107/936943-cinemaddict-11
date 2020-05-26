@@ -1,4 +1,5 @@
 import {isDouble} from "../utils.js";
+const HOUR = 60;
 
 const createGenresMarkup = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
@@ -12,6 +13,8 @@ const createGenresList = (genres) => genres.reduce((genresList, genre) => {
 const getReleaseDate = (date) => `${isDouble(date.day)} ${date.month} ${date.year}`;
 
 export const createDetailsTable = (movie) => {
+  const formatRuntime = (runtime) => `${Math.floor(runtime / HOUR)}h ${runtime % HOUR}m`;
+
   return (
     `<table class="film-details__table">
       <tr class="film-details__row">
@@ -32,7 +35,7 @@ export const createDetailsTable = (movie) => {
       </tr>
       <tr class="film-details__row">
         <td class="film-details__term">Runtime</td>
-        <td class="film-details__cell">${movie.runtime.hours}h ${movie.runtime.minutes}m</td>
+        <td class="film-details__cell">${formatRuntime(movie.runtime)}</td>
       </tr>
       <tr class="film-details__row">
         <td class="film-details__term">Country</td>

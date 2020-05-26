@@ -10,10 +10,10 @@ export const generateDate = (date) => {
   return {
     day: moment(date).format(`DD`),
     month: moment(date).format(`MMMM`),
-    integermonth: date.getMonth() + 1,
+    integermonth: moment(date).format(`MM`),
     year: moment(date).format(`YYYY`),
     hours: moment(date).format(`HH`),
-    minutes: moment(date).format(`MM`)
+    minutes: moment(date).format(`mm`)
   };
 };
 

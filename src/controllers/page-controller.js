@@ -10,6 +10,7 @@ import {render, remove} from "../components/utils.js";
 
 const renderCardsList = (moviesArray, container, onDataChange, onViewChange) => {
   return moviesArray.map((movie) => {
+
     const movieController = new MovieController(container, onDataChange, onViewChange);
 
     movieController.render(movie);
@@ -33,9 +34,10 @@ const sortMovies = {
 };
 
 export default class PageController {
-  constructor(container, moviesModel) {
+  constructor(container, moviesModel, api) {
     this._container = container;
     this._moviesModel = moviesModel;
+    this._api = api;
 
     this._showedMovieControllers = [];
     this._sorterComponent = new SortComponent();
@@ -59,6 +61,7 @@ export default class PageController {
   render() {
     const container = this._container;
     const movies = this._moviesModel.getMovies();
+
     render(container, this._filmsBlockComponent);
 
     const moviesContainer = this._filmsBlockComponent.getElement();
@@ -68,12 +71,12 @@ export default class PageController {
     render(moviesContainer, this._filmsListComponent);
     render(moviesContainer, this._sorterComponent, Position.BEFOREBEGIN);
 
-    // const filmsListBlock = moviesContainer.querySelector(`.films-list__container`);
     this._renderMovies(movies);
     this._renderShowMoreBtn(movies);
-    this._renderTopFilms(moviesContainer, moviesForRender.moviesTop(movies));
 
-    this._renderCommentedFilms(moviesContainer, moviesForRender.moviesCommented(movies));
+    // const filmsListBlock = moviesContainer.querySelector(`.films-list__container`);
+    //this._renderTopFilms(moviesContainer, moviesForRender.moviesTop(movies));
+    //this._renderCommentedFilms(moviesContainer, moviesForRender.moviesCommented(movies));
   }
 
   _renderShowMoreBtn(movies) {
@@ -143,11 +146,20 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
+  /*  const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
 
     if (isSuccess) {
       movieController.render(newData);
-    }
+    }*/
+    this._api.updateMovie(oldData.id, newData)
+      .then((movieModel) => {
+        const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
+
+          if (isSuccess) {
+            movieController.render(newData);
+            this._updateMovies();
+          }
+      })
   }
 
   _onViewChange() {

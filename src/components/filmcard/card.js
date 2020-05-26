@@ -1,8 +1,11 @@
-const DESC_CAPACITY = 139;
 import AbstractSmartComponent from "../abstract-smart-component.js";
+const DESC_CAPACITY = 139;
+const HOUR = 60;
 
 
 const createCard = (movie) => {
+  const formatRuntime = (runtime) => `${Math.floor(runtime / HOUR)}h ${runtime % HOUR}m`;
+
   const isChecked = (flag) => flag ? `film-card__controls-item--active` : ``;
 
   const isTooLong = movie.description.length >= DESC_CAPACITY ? `${movie.description.slice(0, DESC_CAPACITY)}...` : `${movie.description}`;
@@ -12,10 +15,10 @@ const createCard = (movie) => {
       <p class="film-card__rating">${movie.rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${movie.releasedate.year}</span>
-        <span class="film-card__duration">${movie.runtime.hours}h ${movie.runtime.minutes}m</span>
+        <span class="film-card__duration">${formatRuntime(movie.runtime)}</span>
         <span class="film-card__genre">${movie.genres[0]}</span>
       </p>
-      <img src="./images/posters/${movie.poster}" alt="" class="film-card__poster">
+      <img src="${movie.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${isTooLong}</p>
       <a class="film-card__comments">${movie.comments.length} comments</a>
       <form class="film-card__controls">
