@@ -153,13 +153,14 @@ export default class PageController {
     }*/
     this._api.updateMovie(oldData.id, newData)
       .then((movieModel) => {
-        const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
+        const isSuccess = this._moviesModel.updateMovie(oldData.id, movieModel);
 
           if (isSuccess) {
-            movieController.render(newData);
-            this._updateMovies();
+            movieController.render(movieModel);
+            //this._updateMovies();
           }
       })
+
   }
 
   _onViewChange() {

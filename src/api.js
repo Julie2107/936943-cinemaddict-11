@@ -49,18 +49,26 @@ export default class API {
   }
 
   updateMovie(id, data) {
-    const headers = new Headers();
+    return this._load({
+      url: `movies/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data.toRAW()),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+    .then((response) => response.json())
+    .then(Movie.parseMovie);
+  /*  const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
     headers.append(`Content-Type`, `application/json`);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/:${id}`, {
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${id}`, {
       method: `PUT`,
-      body: JSON.stringify(data.toRaw()),
+      body: JSON.stringify(data.toRAW()),
       headers,
     })
       .then(checkStatus)
       .then((response) => response.json())
-      .then(Movie.parseMovie);
+      .then(Movie.parseMovie);*/
   }
 
   _getComments(movie) {

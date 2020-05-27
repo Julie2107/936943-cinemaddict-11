@@ -1,4 +1,5 @@
 import AbstractSmartComponent from "../abstract-smart-component.js";
+import moment from "moment";
 const DESC_CAPACITY = 139;
 const HOUR = 60;
 
@@ -6,6 +7,7 @@ const HOUR = 60;
 const createCard = (movie) => {
   const formatRuntime = (runtime) => `${Math.floor(runtime / HOUR)}h ${runtime % HOUR}m`;
 
+  const formatReleaseDate = (date) => moment(date).format(`YYYY`);
   const isChecked = (flag) => flag ? `film-card__controls-item--active` : ``;
 
   const isTooLong = movie.description.length >= DESC_CAPACITY ? `${movie.description.slice(0, DESC_CAPACITY)}...` : `${movie.description}`;
@@ -14,7 +16,7 @@ const createCard = (movie) => {
       <h3 class="film-card__title">${movie.title.name}</h3>
       <p class="film-card__rating">${movie.rating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">${movie.releasedate.year}</span>
+        <span class="film-card__year">${formatReleaseDate(movie.releasedate)}</span>
         <span class="film-card__duration">${formatRuntime(movie.runtime)}</span>
         <span class="film-card__genre">${movie.genres[0]}</span>
       </p>

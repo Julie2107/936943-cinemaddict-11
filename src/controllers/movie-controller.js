@@ -1,6 +1,7 @@
 import CardComponent from "../components/filmcard/card.js";
 import FilmDetailsComponent from "../components/film-details/film-details.js";
 import CommentComponent from "../components/film-details/comments.js";
+import MovieModel from "../models/movie.js";
 import {encode} from "he";
 // import CardControlsComponent from "../components/filmcard/card-controls.js";
 import {render, remove, replace} from "../components/utils.js";
@@ -106,43 +107,45 @@ export default class MovieController {
   _setDataChangeCardHandler(movie) {
     this._cardComponent.setFavoritesClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, movie, Object.assign({}, movie, {
-        isFavorite: !movie.isFavorite,
-      }));
+      const newMovie = MovieModel.clone(movie);
+      newMovie.isFavorite = !newMovie.isFavorite;
+      this._onDataChange(this, movie, newMovie);
     });
 
     this._cardComponent.setInWatchlistClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, movie, Object.assign({}, movie, {
-        isInWatchlist: !movie.isInWatchlist,
-      }));
+      const newMovie = MovieModel.clone(movie);
+      newMovie.isInWatchlist = !newMovie.isInWatchlist;
+      this._onDataChange(this, movie, newMovie);
     });
 
     this._cardComponent.setWatchedClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, movie, Object.assign({}, movie, {
-        isWatched: !movie.isWatched,
-      }));
+      const newMovie = MovieModel.clone(movie);
+      newMovie.isWatched = !newMovie.isWatched;
+
+      this._onDataChange(this, movie, newMovie);
     });
   }
 
   _setDataChangePopupHandler(movie) {
     this._filmDetailsBlock.setFavoritesClickHandler(() => {
-      this._onDataChange(this, movie, Object.assign({}, movie, {
-        isFavorite: !movie.isFavorite,
-      }));
+      const newMovie = MovieModel.clone(movie);
+      newMovie.isFavorite = !newMovie.isFavorite;
+      this._onDataChange(this, movie, newMovie);
     });
 
     this._filmDetailsBlock.setInWatchlistClickHandler(() => {
-      this._onDataChange(this, movie, Object.assign({}, movie, {
-        isInWatchlist: !movie.isInWatchlist,
-      }));
+      const newMovie = MovieModel.clone(movie);
+      newMovie.isInWatchlist = !newMovie.isInWatchlist;
+      this._onDataChange(this, movie, newMovie);
     });
 
     this._filmDetailsBlock.setWatchedClickHandler(() => {
-      this._onDataChange(this, movie, Object.assign({}, movie, {
-        isWatched: !movie.isWatched,
-      }));
+      const newMovie = MovieModel.clone(movie);
+      newMovie.isWatched = !newMovie.isWatched;
+
+      this._onDataChange(this, movie, newMovie);
     });
   }
 

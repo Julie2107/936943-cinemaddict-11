@@ -55,7 +55,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    console.log(this._movie.comments);
     return createFilmDetails(this._movie, this._getCommentsTemplate(this._movie.comments));
   }
 
