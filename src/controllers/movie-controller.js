@@ -214,6 +214,7 @@ export default class MovieController {
     })
     .catch(() => {
       this.shake(evt.target.closest(`.film-details__comment`));
+      evt.target.removeAttribute(`disabled`);
     });
 
   }
