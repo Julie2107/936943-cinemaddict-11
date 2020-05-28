@@ -7,6 +7,8 @@ import {encode} from "he";
 import {render, remove, replace} from "../components/utils.js";
 import {Position} from "../components/consts.js";
 
+const SHAKE_TIMEOUT = 600;
+
 const Mode = {
   DEFAULT: `default`,
   DETAILS: `details`,
@@ -104,6 +106,14 @@ export default class MovieController {
     document.removeEventListener(`keydown`, this._escKeyHandler);
   }
 
+  shake(block) {
+    block.style.animation = `shake ${SHAKE_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      block.style.animation = ``;
+    }, SHAKE_TIMEOUT);
+  }
+
   _setDataChangeCardHandler(movie) {
     this._cardComponent.setFavoritesClickHandler((evt) => {
       evt.preventDefault();
@@ -196,31 +206,40 @@ export default class MovieController {
     .then(() => {
       newMovie.comments = movie.comments;
       newMovie.comments.splice(commentIndex, 1);
-      evt.target.content = `Deleting...`;
-      evt.target.setAttribute(`disabled`, `disabled`);
+      evt.target.textcontent = `Deleting...`;
+      evt.target.setAttribute(`disabled`, `true`);
 
       // evt.target.closest(`.film-details__comment`).remove();
       this._onDataChange(this, movie, newMovie);
+    })
+    .catch(() => {
+      this.shake(evt.target.closest(`.film-details__comment`));
+      evt.target.removeAttribute(`disabled`);
     });
-  //  .catch - валидация
+
   }
 
   _addCommentHandler(evt, movie) {
     const newMovie = MovieModel.clone(movie);
     if (evt.key === `Enter` && (evt.ctrlKey || evt.metaKey)) {
       const newCommentData = this._getNewCommentData(this._filmDetailsBlock.getElement().querySelector(`.film-details__new-comment`));
-
+      const newCommentForm = document.querySelector(`.film-details__inner`);
       this._api.createComment(newMovie.id, newCommentData)
         .then(() => {
+          newCommentForm.querySelector(`.film-details__comment-input`).style.border = `none`;
           newMovie.comments.splice(movie.comments.length, 0, newCommentData);
 
-          const newCommentForm = document.querySelector(`.film-details__inner`);
-          newCommentForm.setAttribute(`disabled`, `disabled`);
+
+          [...newCommentForm.querySelectorAll(`textarea, input`)].forEach((element) => element.setAttribute(`disabled`, `disabled`));
           this._onDataChange(this, movie, newMovie);
 
         })
-        .then(() => this._renderNewComment(newCommentData));
-      // .catch - валидация
+        .then(() => this._renderNewComment(newCommentData))
+        .catch(() => {
+          this.shake(newCommentForm);
+          newCommentForm.querySelector(`.film-details__comment-input`).style.border = `2px solid red`;
+          [...newCommentForm.querySelectorAll(`textarea, input`)].forEach((element) => element.removeAttribute(`disabled`));
+        });
     }
   }
 

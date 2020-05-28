@@ -7,6 +7,7 @@ import NoFilmsComponent from "../components/film-block/no-films.js";
 import MoreButtonComponent from "../components/film-block/more-button.js";
 import MovieController from "./movie-controller.js";
 import {render, remove} from "../components/utils.js";
+import {generateDate} from "../mocks/mocks-utils.js";
 
 const renderCardsList = (moviesArray, container, onDataChange, onViewChange, api) => {
 
@@ -30,7 +31,7 @@ const moviesForRender = {
 
 const sortMovies = {
   'rating': (movies) => [...movies].sort((prevMovie, nextMovie) => nextMovie.rating - prevMovie.rating),
-  'date': (movies) => [...movies].sort((currentMovie, nextMovie) => nextMovie.releasedate.year - currentMovie.releasedate.year),
+  'date': (movies) => [...movies].sort((currentMovie, nextMovie) => generateDate(nextMovie.releasedate).year - generateDate(currentMovie.releasedate).year),
   'default': (movies) => movies
 };
 

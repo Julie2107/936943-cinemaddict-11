@@ -26,8 +26,6 @@ export default class Movie {
   }
 
   toRAW(clone = false) {
-  //  const commentsIds = this.comments.map((comment) => comment.id);
-  //  console.log(commentsIds);
     return {
       "id": this.id,
       "comments": clone ? this.comments : this.comments.map(({id}) => id),
