@@ -2,8 +2,6 @@ export const CARDS_AMOUNT = 10;
 export const CARDS_AMOUNT_EXTRA = 2;
 export const CARDS_AMOUNT_RENDER = 5;
 
-const HOUR = 60;
-
 export const Position = {
   BEFOREEND: `beforeend`,
   AFTEREND: `afterend`,

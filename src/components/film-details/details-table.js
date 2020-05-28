@@ -1,4 +1,3 @@
-import {isDouble} from "../utils.js";
 import moment from "moment";
 
 const HOUR = 60;
@@ -13,7 +12,6 @@ export const generateDate = (date) => {
     minutes: moment(date).format(`mm`)
   };
 };
-
 
 const createGenresMarkup = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;

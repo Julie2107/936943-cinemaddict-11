@@ -1,8 +1,6 @@
 import AbstractComponent from "../abstract-smart-component.js";
 import {generateDate} from "../../mocks/mocks-utils.js";
 
-
-
 const createDetailsComment = (comment) => {
   return (
     `<li class="film-details__comment">
@@ -36,8 +34,8 @@ export default class Comment extends AbstractComponent {
 
   getTemplate() {
     const getCommentDate = (date) => {
-      const commentDate = generateDate(date)
-      return `${commentDate.year}/${commentDate.integermonth}/${commentDate.day} ${commentDate.hours}:${commentDate.minutes}`
+      const commentDate = generateDate(date);
+      return `${commentDate.year}/${commentDate.integermonth}/${commentDate.day} ${commentDate.hours}:${commentDate.minutes}`;
     };
     return (
       `<li class="film-details__comment" data-comment-id="${this._comment.id}">

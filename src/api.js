@@ -24,7 +24,7 @@ const checkStatus = (response) => {
   if (response.status >= StatusCode.OK && response.status < StatusCode.MULTIPLE) {
     return response;
   } else {
-    throw new Error (`${response.status}: ${response.statusText}`)
+    throw new Error(`${response.status}: ${response.statusText}`);
   }
 };
 
@@ -35,12 +35,6 @@ export default class API {
   }
 
   getMovies() {
-    /*const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies`, {headers})
-      .then((response) => response.json())
-      .then(Movie.parseMovies);*/
     return this._load({url: `${Url.MOVIES}`})
       .then((response) => response.json())
       .then((movies) => Promise.all(movies.map((movie) => this._getComments(movie))))
@@ -56,26 +50,31 @@ export default class API {
       headers: new Headers({"Content-Type": `application/json`})
     })
     .then((response) => response.json())
+    .then((movie) => this._getComments(movie))
     .then(Movie.parseMovie);
-  /*  const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-    headers.append(`Content-Type`, `application/json`);
+  }
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${id}`, {
-      method: `PUT`,
-      body: JSON.stringify(data.toRAW()),
-      headers,
+  createComment(id, commentData) {
+    return this._load({
+      url: `comments/${id}`,
+      method: Method.POST,
+      body: JSON.stringify(commentData),
+      headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(checkStatus)
-      .then((response) => response.json())
-      .then(Movie.parseMovie);*/
+    .then((response) => response.json());
+  }
+
+  deleteComment(id) {
+    return this._load({
+      url: `comments/${id}`,
+      method: Method.DELETE
+    });
   }
 
   _getComments(movie) {
-    return  this._load({url: `${Url.COMMENTS}/${movie.id}`})
+    return this._load({url: `${Url.COMMENTS}/${movie.id}`})
         .then((response) => response.json())
-        .then((comments) =>
-          Object.assign({}, movie, {comments: comments}));
+        .then((commentsList) => Object.assign({}, movie, {comments: commentsList}));
   }
 
   _load({url, method = `GET`, body = null, headers = new Headers()}) {

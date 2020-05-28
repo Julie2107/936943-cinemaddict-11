@@ -5,7 +5,7 @@ export default class Movie {
     this.title = {
       name: data.film_info.title,
       original: data[`film_info`][`alternative_title`]
-    }
+    };
     this.poster = data[`film_info`][`poster`];
     this.rating = data[`film_info`][`total_rating`];
     this.agerating = data[`film_info`][`age_rating`];
@@ -25,12 +25,12 @@ export default class Movie {
     this.viewDate = data[`user_details`][`watching_date`];
   }
 
-  toRAW() {
+  toRAW(clone = false) {
   //  const commentsIds = this.comments.map((comment) => comment.id);
   //  console.log(commentsIds);
     return {
       "id": this.id,
-      "comments": [],
+      "comments": clone ? this.comments : this.comments.map(({id}) => id),
       "film_info": {
         "title": this.title.name,
         "alternative_title": this.title.original,
@@ -54,7 +54,7 @@ export default class Movie {
         "watching_date": this.viewDate,
         "favorite": this.isFavorite
       }
-    }
+    };
   }
 
   static parseMovie(data) {
@@ -67,6 +67,6 @@ export default class Movie {
   }
 
   static clone(data) {
-    return new Movie(data.toRAW());
+    return new Movie(data.toRAW(true));
   }
 }
