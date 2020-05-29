@@ -5,6 +5,7 @@ import FooterStatsComponent from "./components/footer-statistics.js";
 import PageController from "./controllers/page-controller.js";
 import FilterController from "./controllers/filter-controller.js";
 import MoviesModel from "./models/movies.js";
+import StatsComponent from "./components/statistic/stats.js";
 import {render, remove} from "./components/utils.js";
 // import {generateMovies} from "./mocks/movie.js";
 
@@ -24,6 +25,7 @@ const init = () => {
   const filterController = new FilterController(main, moviesModel);
   filterController.render();
   const pageController = new PageController(main, moviesModel, api);
+  const statsComponent = new StatsComponent(moviesModel);
   const loadingComponent = new LoadingComponent();
   render(main, loadingComponent);
   api.getMovies()
@@ -35,6 +37,7 @@ const init = () => {
   const countIsWatched = moviesModel.getMovies().filter((movie) => movie.isWatched).length;
 
   render(header, new ProfileComponent(countIsWatched));
+  render(main, statsComponent);
   render(footerStatsBlock, new FooterStatsComponent(moviesModel.getMovies().length));
 };
 

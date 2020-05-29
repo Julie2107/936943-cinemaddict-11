@@ -1,6 +1,7 @@
 import {FilterType} from "../components/consts.js";
 import {filterMovies} from "../controllers/filter-controller.js";
 import SortType from "../components/sorter/sort.js";
+import {generateUserRating} from "../mocks/profile.js";
 
 export default class Movies {
   constructor() {
@@ -33,6 +34,28 @@ export default class Movies {
   setFilter(filterType) {
     this._activeFilterType = filterType;
     this._callHandlers(this._filterChangeHandlers);
+  }
+
+  getUserRating() {
+    const isWatchedMovies = this._movies.filter((movie) => movie.isWatched).length;
+    return {
+      number: isWatchedMovies,
+      rank: generateUserRating(isWatchedMovies)
+    }
+  }
+
+  getTopGenre() {
+    const isWatchedMovies = this._movies.filter((movie) => movie.isWatched);
+    const singleGenres = [];
+
+    return isWatchedMovies.reduce((genres, movie) => {
+      movie.genres.forEach((genre) => {
+        if (!genres.includes(genre)) {
+          genres.push(genre);
+        }
+      });
+      return genres;
+    }, []);
   }
 
   // изменение сортировки
