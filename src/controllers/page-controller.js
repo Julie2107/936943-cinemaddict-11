@@ -81,6 +81,16 @@ export default class PageController {
     // this._renderCommentedFilms(moviesContainer, moviesForRender.moviesCommented(movies));
   }
 
+  show() {
+  this._filmsBlockComponent.show();
+  this._sorterComponent.show();
+  }
+
+  hide() {
+  this._filmsBlockComponent.hide();
+  this._sorterComponent.hide();
+  }
+
   _renderShowMoreBtn(movies) {
     const moviesContainer = this._filmsBlockComponent.getElement();
     const filmsListBlock = moviesContainer.querySelector(`.films-list__container`);
