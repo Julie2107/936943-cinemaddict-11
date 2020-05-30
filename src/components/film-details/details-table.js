@@ -1,6 +1,5 @@
 import moment from "moment";
-
-const HOUR = 60;
+import {formatRuntime} from "../utils.js";
 
 export const generateDate = (date) => {
   return {
@@ -25,7 +24,6 @@ const createGenresList = (genres) => genres.reduce((genresList, genre) => {
 const getReleaseDate = (date) => `${generateDate(date).day} ${generateDate(date).month} ${generateDate(date).year}`;
 
 export const createDetailsTable = (movie) => {
-  const formatRuntime = (runtime) => `${Math.floor(runtime / HOUR)}h ${runtime % HOUR}m`;
 
   return (
     `<table class="film-details__table">
@@ -47,7 +45,7 @@ export const createDetailsTable = (movie) => {
       </tr>
       <tr class="film-details__row">
         <td class="film-details__term">Runtime</td>
-        <td class="film-details__cell">${formatRuntime(movie.runtime)}</td>
+        <td class="film-details__cell">${formatRuntime(movie.runtime).hours}h ${formatRuntime(movie.runtime).hours}m</td>
       </tr>
       <tr class="film-details__row">
         <td class="film-details__term">Country</td>

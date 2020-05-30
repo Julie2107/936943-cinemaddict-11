@@ -45,7 +45,6 @@ export default class Menu extends AbstractComponent {
   setMenuClickHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
-      console.log(`click`);
       this._setActiveClass(evt);
       const menuItem = evt.target.dataset.menuItem;
       handler(menuItem);

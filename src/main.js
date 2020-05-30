@@ -22,7 +22,7 @@ const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const init = () => {
   const api = new API(END_POINT, AUTHORIZATION);
   const moviesModel = new MoviesModel();
-  const statsComponent = new StatsComponent(moviesModel);
+  const statsComponent = new StatsComponent(moviesModel.getMoviesAll());
   const pageController = new PageController(main, moviesModel, api);
   const filterController = new FilterController(main, moviesModel, statsComponent, pageController);
   filterController.render();

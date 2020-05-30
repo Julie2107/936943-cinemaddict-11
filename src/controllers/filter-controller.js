@@ -72,9 +72,8 @@ export default class FilterController {
         console.log(`show films`);
         break;
       case MenuItem.STATS:
-        this._statsComponent.show();
+        this._statsComponent.show(this._moviesModel.getMoviesAll());
         this._pageController.hide();
-        console.log(`show stats`);
         break;
     }
   }

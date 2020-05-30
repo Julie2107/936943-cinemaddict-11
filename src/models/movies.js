@@ -36,27 +36,7 @@ export default class Movies {
     this._callHandlers(this._filterChangeHandlers);
   }
 
-  getUserRating() {
-    const isWatchedMovies = this._movies.filter((movie) => movie.isWatched).length;
-    return {
-      number: isWatchedMovies,
-      rank: generateUserRating(isWatchedMovies)
-    }
-  }
 
-  getTopGenre() {
-    const isWatchedMovies = this._movies.filter((movie) => movie.isWatched);
-    const singleGenres = [];
-
-    return isWatchedMovies.reduce((genres, movie) => {
-      movie.genres.forEach((genre) => {
-        if (!genres.includes(genre)) {
-          genres.push(genre);
-        }
-      });
-      return genres;
-    }, []);
-  }
 
   // изменение сортировки
 

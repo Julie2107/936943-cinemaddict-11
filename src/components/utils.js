@@ -1,6 +1,7 @@
 import {Position, EscKeys} from "./consts.js";
 
 const DECIMAL = 10;
+const HOUR = 60;
 
 export const escKeyHandler = (evt, action) => {
   const isEscKey = evt.key === EscKeys.ESCAPE || evt.key === EscKeys.ESC;
@@ -52,3 +53,10 @@ export const replace = (newComponent, oldComponent) => {
     parentElement.replaceChild(newElement, oldElement);
   }
 };
+
+export const formatRuntime = (runtime) => {
+  return {
+    hours: Math.floor(runtime / HOUR),
+    minutes: runtime % HOUR
+  }
+}
