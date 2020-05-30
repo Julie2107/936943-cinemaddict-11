@@ -19,6 +19,37 @@ const UserRating = {
   }
 };
 
+const StatsFilter = [
+  {
+    name: `All time`,
+    id: `all-time`
+  },
+  {
+    name: `Today`,
+    id: `today`
+  },
+  {
+    name: `Week`,
+    id: `week`
+  },
+   {
+    name: `Month`,
+    id: `month`
+  },
+  {
+    name: `Year`,
+    id: `year`
+  }
+];
+
+const StatsFilterValue = {
+  'all-time': 0,
+  'today': 1,
+  'week': 7,
+  'month': 30,
+  'year': 365
+}
+
 export const generateUserRating = (watched) => {
   if (watched >= UserRating.BUFF.min) {
     return UserRating.BUFF.name;
@@ -30,15 +61,31 @@ export const generateUserRating = (watched) => {
   return ``;
 };
 
+const createStatsFilterItem = (filter, activeFilter) => {
+  const isChecked = activeFilter === filter.id ? ` checked` : ``;
+//  const checkedFilter = isChecked ? `checked` : ``;
+  return (
+    `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${filter.id}" value="${filter.id}" ${isChecked}>
+    <label for="${filter.id}" class="statistic__filters-label">${filter.name}</label>`
+  )
+}
+
+const createStatsFilterMarkup = (filters, activeFilter) => filters.reduce((filtersList, filter) => {
+  filtersList += createStatsFilterItem(filter, activeFilter);
+  return filtersList;
+}, ``);
+
 
 export default class Stats extends AbstractSmartComponent {
   constructor(movies) {
     super();
     this._chart = null;
     this._movies = movies;
+    this._filter = `all-time`;
   }
 
-  createStatistics(movies)  {
+  createStatistics(movies, activeFilter)  {
+    console.log(activeFilter);
     return (
       `<section class="statistic">
         <p class="statistic__rank">
@@ -49,21 +96,7 @@ export default class Stats extends AbstractSmartComponent {
 
         <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
           <p class="statistic__filters-description">Show stats:</p>
-
-          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
-          <label for="statistic-all-time" class="statistic__filters-label">All time</label>
-
-          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
-          <label for="statistic-today" class="statistic__filters-label">Today</label>
-
-          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
-          <label for="statistic-week" class="statistic__filters-label">Week</label>
-
-          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
-          <label for="statistic-month" class="statistic__filters-label">Month</label>
-
-          <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
-          <label for="statistic-year" class="statistic__filters-label">Year</label>
+          ${createStatsFilterMarkup(StatsFilter, activeFilter)}
         </form>
 
         <ul class="statistic__text-list">
@@ -90,7 +123,7 @@ export default class Stats extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return this.createStatistics(this._movies);
+    return this.createStatistics(this._movies, this._filter);
   }
 
   show(movies) {
@@ -101,10 +134,15 @@ export default class Stats extends AbstractSmartComponent {
 
   render() {
     this._renderChart();
+    this.setFilterStatisticsChangeHandler();
+  }
+
+  getWatchedMovies() {
+    return this._movies = this._movies.filter((movie) => movie.isWatched);
   }
 
   getUserRating() {
-    const isWatchedMovies = this._movies.filter((movie) => movie.isWatched);
+    const isWatchedMovies = this.getWatchedMovies();
     const totalRunTime = isWatchedMovies.reduce((total, movie) => total += movie.runtime, 0);
     return {
       number: isWatchedMovies.length,
@@ -118,26 +156,12 @@ export default class Stats extends AbstractSmartComponent {
     if (genres.length !== 0) {
       return genres[0].genre;
     }
-    return `0`
-  }
-
-  getTopGenre() {
-    const isWatchedMovies = this._movies.filter((movie) => movie.isWatched);
-    const singleGenres = [];
-
-    return isWatchedMovies.reduce((genres, movie) => {
-      movie.genres.forEach((genre) => {
-        if (!genres.includes(genre)) {
-          genres.push(genre);
-        }
-      });
-      return genres;
-    }, []);
+    return `0`;
   }
 
   _getMoviesGenres() {
 
-    const isWatchedMovies = this._movies.filter((movie) => movie.isWatched);
+    const isWatchedMovies = this.getWatchedMovies();
     return isWatchedMovies.reduce((genres, movie) => {
       movie.genres.forEach((genre) => {
         if (!genres.includes(genre)) {
@@ -150,7 +174,7 @@ export default class Stats extends AbstractSmartComponent {
 
   _getAmountByGenre() {
     const moviesGenres = this._getMoviesGenres();
-    const isWatchedMovies = this._movies.filter((movie) => movie.isWatched);
+    const isWatchedMovies = this.getWatchedMovies();
     return moviesGenres.map((genre) => {
       return {
         genre,
@@ -159,14 +183,30 @@ export default class Stats extends AbstractSmartComponent {
     }).sort((prevGenre, nextGenre) => nextGenre.count - prevGenre.count);
   }
 
+  _getFilteredMovies(filterType, movies) {
+    const filterPeriod = StatsFilterValue[filterType];
+      if (filterType === 0) {
+      return movies;
+    }
 
-  recoveryListeners() {}
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - filterPeriod);
+
+    const filteredMovies = movies.slice().filter((movie) => movie.viewDate.getTime() >= currentDate.getTime());
+    return filteredMovies;
+  }
+
+
+  recoveryListeners() {
+    this.setFilterStatisticsChangeHandler();
+  }
 
   rerender(movies) {
     this._movies = movies;
 
     super.rerender();
     this._renderCharts();
+    super.show();
   }
 
   _renderCharts() {
@@ -236,6 +276,22 @@ export default class Stats extends AbstractSmartComponent {
             }
         }
     });
+  }
+
+  setFilterStatisticsChangeHandler() {
+    this.getElement().querySelector(`.statistic__filters`)
+      .addEventListener(`change`, (evt) => {
+        evt.preventDefault();
+        if (evt.target.tagName !== `INPUT`) {
+          return;
+        }
+
+        const filterType = evt.target.value;
+        this._filter = filterType;
+        this._getFilteredMovies(filterType, this._movies);
+        console.log(filterType);
+        this.rerender();
+      });
   }
 
   _resetCharts() {

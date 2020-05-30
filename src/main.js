@@ -38,9 +38,10 @@ const init = () => {
 
   render(header, new ProfileComponent(countIsWatched));
   render(main, statsComponent);
+  //statsComponent.setFilterStatisticsChangeHandler();
   statsComponent.hide();
 
-  //statsComponent.render();
+  statsComponent.render();
   render(footerStatsBlock, new FooterStatsComponent(moviesModel.getMovies().length));
 };
 

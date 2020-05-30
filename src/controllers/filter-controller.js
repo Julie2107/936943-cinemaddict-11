@@ -63,13 +63,11 @@ export default class FilterController {
     this._activeFilterType = filterType;
   }
 
-
   _menuClickHandler(menuItem, statsComponent, pageController) {
     switch (menuItem) {
       case MenuItem.MOVIES:
         this._statsComponent.hide();
         this._pageController.show();
-        console.log(`show films`);
         break;
       case MenuItem.STATS:
         this._statsComponent.show(this._moviesModel.getMoviesAll());
