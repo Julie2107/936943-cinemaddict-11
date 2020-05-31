@@ -6,8 +6,12 @@ import FilmsExtraComponent from "../components/film-block/films-list-extra.js";
 import NoFilmsComponent from "../components/film-block/no-films.js";
 import MoreButtonComponent from "../components/film-block/more-button.js";
 import MovieController from "./movie-controller.js";
+import ProfileComponent from "../components/user-profile.js";
+
 import {render, remove} from "../components/utils.js";
 import {generateDate} from "../mocks/mocks-utils.js";
+
+const header = document.querySelector(`.header`);
 
 const renderCardsList = (moviesArray, container, onDataChange, onViewChange, api) => {
 
@@ -41,7 +45,9 @@ export default class PageController {
     this._moviesModel = moviesModel;
     this._api = api;
 
+
     this._showedMovieControllers = [];
+    this._profileComponent = new ProfileComponent(moviesModel);
     this._sorterComponent = new SortComponent();
     this._filmsBlockComponent = new FilmBlockComponent();
     this._filmsListComponent = new FilmsListComponent();
@@ -64,6 +70,7 @@ export default class PageController {
     const container = this._container;
     const movies = this._moviesModel.getMovies();
 
+    render(header, this._profileComponent);
     render(container, this._filmsBlockComponent);
 
     const moviesContainer = this._filmsBlockComponent.getElement();
@@ -72,13 +79,23 @@ export default class PageController {
     }
     render(moviesContainer, this._filmsListComponent);
     render(moviesContainer, this._sorterComponent, Position.BEFOREBEGIN);
-
     this._renderMovies(movies);
     this._renderShowMoreBtn(movies);
+
 
     // const filmsListBlock = moviesContainer.querySelector(`.films-list__container`);
     // this._renderTopFilms(moviesContainer, moviesForRender.moviesTop(movies));
     // this._renderCommentedFilms(moviesContainer, moviesForRender.moviesCommented(movies));
+  }
+
+  show() {
+    this._filmsBlockComponent.show();
+    this._sorterComponent.show();
+  }
+
+  hide() {
+    this._filmsBlockComponent.hide();
+    this._sorterComponent.hide();
   }
 
   _renderShowMoreBtn(movies) {
@@ -145,16 +162,12 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-  /*  const isSuccess = this._moviesModel.updateMovie(oldData.id, newData);
-
-    if (isSuccess) {
-      movieController.render(newData);
-    }*/
     this._api.updateMovie(oldData.id, newData)
       .then((movieModel) => {
         const isSuccess = this._moviesModel.updateMovie(oldData.id, movieModel);
         if (isSuccess) {
           movieController.render(movieModel);
+          this._profileComponent.rerender();
         //  this._updateMovies();
         }
       });
