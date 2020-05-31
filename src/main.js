@@ -22,10 +22,7 @@ const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const init = () => {
   const api = new API(END_POINT, AUTHORIZATION);
   const moviesModel = new MoviesModel();
-  const statsComponent = new StatsComponent(moviesModel.getMoviesAll());
   const pageController = new PageController(main, moviesModel, api);
-  const filterController = new FilterController(main, moviesModel, statsComponent, pageController);
-  filterController.render();
   const loadingComponent = new LoadingComponent();
   render(main, loadingComponent);
   api.getMovies()
@@ -34,14 +31,19 @@ const init = () => {
     moviesModel.setMovies(movies);
     pageController.render();
   });
-  const countIsWatched = moviesModel.getMovies().filter((movie) => movie.isWatched).length;
+  // const countIsWatched = moviesModel.getMovies().filter((movie) => movie.isWatched).length;
 
-  render(header, new ProfileComponent(countIsWatched));
+  const isWatchedMovies = moviesModel.getMoviesAll().filter((movie) => movie.isWatched);
+  const statsComponent = new StatsComponent(moviesModel.getMoviesAll());
+  const filterController = new FilterController(main, moviesModel, statsComponent, pageController);
+  filterController.render();
+
+  render(header, new ProfileComponent(isWatchedMovies.length));
   render(main, statsComponent);
-  //statsComponent.setFilterStatisticsChangeHandler();
+//  statsComponent.setFilterStatisticsChangeHandler();
   statsComponent.hide();
 
-  statsComponent.render();
+//  statsComponent.render();
   render(footerStatsBlock, new FooterStatsComponent(moviesModel.getMovies().length));
 };
 

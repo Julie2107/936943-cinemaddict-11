@@ -1,8 +1,8 @@
 import AbstractSmartComponent from "../abstract-smart-component.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import moment from "moment";
 import {formatRuntime} from "../utils.js";
+import moment from "moment";
 
 const UserRating = {
   NOVICE: {
@@ -32,7 +32,7 @@ const StatsFilter = [
     name: `Week`,
     id: `week`
   },
-   {
+  {
     name: `Month`,
     id: `month`
   },
@@ -48,7 +48,7 @@ const StatsFilterValue = {
   'week': 7,
   'month': 30,
   'year': 365
-}
+};
 
 export const generateUserRating = (watched) => {
   if (watched >= UserRating.BUFF.min) {
@@ -63,12 +63,12 @@ export const generateUserRating = (watched) => {
 
 const createStatsFilterItem = (filter, activeFilter) => {
   const isChecked = activeFilter === filter.id ? ` checked` : ``;
-//  const checkedFilter = isChecked ? `checked` : ``;
+  //  const checkedFilter = isChecked ? `checked` : ``;
   return (
     `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${filter.id}" value="${filter.id}" ${isChecked}>
-    <label for="${filter.id}" class="statistic__filters-label">${filter.name}</label>`
-  )
-}
+    <label for="statistic-${filter.id}" class="statistic__filters-label">${filter.name}</label>`
+  );
+};
 
 const createStatsFilterMarkup = (filters, activeFilter) => filters.reduce((filtersList, filter) => {
   filtersList += createStatsFilterItem(filter, activeFilter);
@@ -82,10 +82,10 @@ export default class Stats extends AbstractSmartComponent {
     this._chart = null;
     this._movies = movies;
     this._filter = `all-time`;
+    this._chartData = [];
   }
 
-  createStatistics(movies, activeFilter)  {
-    console.log(activeFilter);
+  createStatistics(movies, activeFilter) {
     return (
       `<section class="statistic">
         <p class="statistic__rank">
@@ -119,7 +119,7 @@ export default class Stats extends AbstractSmartComponent {
         </div>
 
       </section>`
-    )
+    );
   }
 
   getTemplate() {
@@ -137,18 +137,48 @@ export default class Stats extends AbstractSmartComponent {
     this.setFilterStatisticsChangeHandler();
   }
 
-  getWatchedMovies() {
-    return this._movies = this._movies.filter((movie) => movie.isWatched);
+  recoveryListeners() {
+    this.setFilterStatisticsChangeHandler();
+  }
+
+  rerender(movies) {
+    this._movies = movies;
+    console.log(movies);
+    super.rerender();
+    this._renderChart();
+    super.show();
+  }
+
+  setFilterStatisticsChangeHandler() {
+    this.getElement().querySelector(`.statistic__filters`)
+    .addEventListener(`change`, (evt) => {
+      evt.preventDefault();
+      if (evt.target.tagName !== `INPUT`) {
+        return;
+      }
+
+      const filterType = evt.target.value;
+      this._filter = filterType;
+      //this._getFilteredMovies(filterType, this._movies)
+      this.rerender(this._getFilteredMovies(filterType, this._movies));
+    });
   }
 
   getUserRating() {
-    const isWatchedMovies = this.getWatchedMovies();
-    const totalRunTime = isWatchedMovies.reduce((total, movie) => total += movie.runtime, 0);
+    const isWatchedMovies = this._getWatchedMovies();
+    const totalRunTime = isWatchedMovies.reduce((total, movie) => {
+      total += movie.runtime;
+      return total;
+    }, 0);
     return {
       number: isWatchedMovies.length,
       rank: generateUserRating(isWatchedMovies.length),
       totalTime: formatRuntime(totalRunTime)
-    }
+    };
+  }
+
+  _getWatchedMovies() {
+    return this._movies.filter((movie) => movie.isWatched);
   }
 
   _getTopGenre() {
@@ -159,9 +189,19 @@ export default class Stats extends AbstractSmartComponent {
     return `0`;
   }
 
-  _getMoviesGenres() {
+  _getAmountByGenre() {
+    const moviesGenres = this._getMoviesGenres();
+    const isWatchedMovies = this._getWatchedMovies();
+    return moviesGenres.map((genre) => {
+      return {
+        genre,
+        count: this._movies.filter((movie) => movie.genres.includes(genre)).length,
+      };
+    }).sort((prevGenre, nextGenre) => nextGenre.count - prevGenre.count);
+  }
 
-    const isWatchedMovies = this.getWatchedMovies();
+  _getMoviesGenres() {
+    const isWatchedMovies = this._getWatchedMovies();
     return isWatchedMovies.reduce((genres, movie) => {
       movie.genres.forEach((genre) => {
         if (!genres.includes(genre)) {
@@ -169,129 +209,84 @@ export default class Stats extends AbstractSmartComponent {
         }
       });
       return genres;
-      }, []);
-  }
-
-  _getAmountByGenre() {
-    const moviesGenres = this._getMoviesGenres();
-    const isWatchedMovies = this.getWatchedMovies();
-    return moviesGenres.map((genre) => {
-      return {
-        genre,
-        count: isWatchedMovies.filter((movie) => movie.genres.includes(genre)).length,
-      };
-    }).sort((prevGenre, nextGenre) => nextGenre.count - prevGenre.count);
+    }, []);
   }
 
   _getFilteredMovies(filterType, movies) {
     const filterPeriod = StatsFilterValue[filterType];
-      if (filterType === 0) {
+    if (filterType === 0) {
       return movies;
     }
 
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - filterPeriod);
 
-    const filteredMovies = movies.slice().filter((movie) => movie.viewDate.getTime() >= currentDate.getTime());
+    const filteredMovies = movies.slice().filter((movie) => moment(movie.viewDate).format() >= moment(currentDate).format());
     return filteredMovies;
-  }
-
-
-  recoveryListeners() {
-    this.setFilterStatisticsChangeHandler();
-  }
-
-  rerender(movies) {
-    this._movies = movies;
-
-    super.rerender();
-    this._renderCharts();
-    super.show();
-  }
-
-  _renderCharts() {
-    this._renderChart();
-
   }
 
   _renderChart() {
     const chartDataMovies = this._getAmountByGenre();
     const BAR_HEIGHT = 50;
     const statisticCtx = document.querySelector(`.statistic__chart`);
-    statisticCtx.height = BAR_HEIGHT * 5;
+    statisticCtx.height = BAR_HEIGHT * chartDataMovies.length;
 
     this._Chart = new Chart(statisticCtx, {
-        plugins: [ChartDataLabels],
-        type: `horizontalBar`,
-        data: {
-            labels: chartDataMovies.map((movie) => movie.genre),
-            datasets: [{
-                data: chartDataMovies.map((movie) => movie.count),
-                backgroundColor: `#ffe800`,
-                hoverBackgroundColor: `#ffe800`,
-                anchor: `start`
-            }]
+      plugins: [ChartDataLabels],
+      type: `horizontalBar`,
+      data: {
+        labels: chartDataMovies.map((movie) => movie.genre),
+        datasets: [{
+          data: chartDataMovies.map((movie) => movie.count),
+          backgroundColor: `#ffe800`,
+          hoverBackgroundColor: `#ffe800`,
+          anchor: `start`,
+          barThickness: 24
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            font: {
+              size: 20
+            },
+            color: `#ffffff`,
+            anchor: `start`,
+            align: `start`,
+            offset: 40,
+          }
         },
-        options: {
-            plugins: {
-                datalabels: {
-                    font: {
-                        size: 20
-                    },
-                    color: `#ffffff`,
-                    anchor: 'start',
-                    align: 'start',
-                    offset: 40,
-                }
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: `#ffffff`,
+              padding: 100,
+              fontSize: 20
             },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        fontColor: `#ffffff`,
-                        padding: 100,
-                        fontSize: 20
-                    },
-                    gridLines: {
-                        display: false,
-                        drawBorder: false
-                    },
-                    barThickness: 24
-                }],
-                xAxes: [{
-                    ticks: {
-                        display: false,
-                        beginAtZero: true
-                    },
-                    gridLines: {
-                        display: false,
-                        drawBorder: false
-                    },
-                }],
-            },
-            legend: {
-                display: false
-            },
-            tooltips: {
-                enabled: false
+            gridLines: {
+              display: false,
+              drawBorder: false
             }
+          }],
+          xAxes: [{
+            ticks: {
+              display: false,
+              beginAtZero: true
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+          }],
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: false
         }
+      }
     });
-  }
-
-  setFilterStatisticsChangeHandler() {
-    this.getElement().querySelector(`.statistic__filters`)
-      .addEventListener(`change`, (evt) => {
-        evt.preventDefault();
-        if (evt.target.tagName !== `INPUT`) {
-          return;
-        }
-
-        const filterType = evt.target.value;
-        this._filter = filterType;
-        this._getFilteredMovies(filterType, this._movies);
-        console.log(filterType);
-        this.rerender();
-      });
   }
 
   _resetCharts() {
