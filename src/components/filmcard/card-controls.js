@@ -1,6 +1,5 @@
 import AbstractSmartComponent from "../abstract-smart-component.js";
 
-
 const createCardControls = (movie) => {
   const isChecked = (flag) => flag ? `film-card__controls-item--active` : ``;
   return (
@@ -19,18 +18,6 @@ export default class CardControls extends AbstractSmartComponent {
     this._subscribeOnEvents = this._subscribeOnEvents.bind(this);
   }
 
-  getTemplate() {
-    return createCardControls(this._movie);
-  }
-
-  recoveryListeners() {
-    this._subscribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
-  }
-
   setFavoritesClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`)
       .addEventListener(`click`, handler);
@@ -44,6 +31,18 @@ export default class CardControls extends AbstractSmartComponent {
   setWatchedClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
       .addEventListener(`click`, handler);
+  }
+
+  getTemplate() {
+    return createCardControls(this._movie);
+  }
+
+  recoveryListeners() {
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
   }
 
   _subscribeOnEvents() {

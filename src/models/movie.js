@@ -1,4 +1,3 @@
-
 export default class Movie {
   constructor(data) {
     this.id = data[`id`];
@@ -56,7 +55,6 @@ export default class Movie {
   }
 
   static parseMovie(data) {
-  //  console.log(data);
     return new Movie(data);
   }
 

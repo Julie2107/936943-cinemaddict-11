@@ -54,25 +54,6 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._addNewCommentHandler = null;
   }
 
-  getTemplate() {
-    return createFilmDetails(this._movie, this._getCommentsTemplate(this._movie.comments));
-  }
-
-  recoveryListeners() {
-  //  this._subscribeOnEvents();
-    this.setEmojiClickHandler(this._emojiClickButtonHandler);
-    this.setCloseButtonHandler(this._closeButtonClickHandler);
-    this.setInWatchlistClickHandler(this._inWatchlistButtonClickHandler);
-    this.setWatchedClickHandler(this._watchedButtonClickHandler);
-    this.setFavoritesClickHandler(this._favoritesButtonClickHandler);
-    this.setDeleteCommentBtnHandler(this._deleteCommentBtnClickHanler);
-    this.setNewCommentHandler(this._addNewCommentHandler);
-  }
-
-  rerender() {
-    super.rerender();
-  }
-
   setCloseButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
 
@@ -116,17 +97,37 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._emojiClickButtonHandler = handler;
   }
 
+  setNewCommentHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, handler);
+
+    this._addNewCommentHandler = handler;
+  }
+
+  getTemplate() {
+    return createFilmDetails(this._movie, this._getCommentsTemplate(this._movie.comments));
+  }
+
+  recoveryListeners() {
+  //  this._subscribeOnEvents();
+    this.setEmojiClickHandler(this._emojiClickButtonHandler);
+    this.setCloseButtonHandler(this._closeButtonClickHandler);
+    this.setInWatchlistClickHandler(this._inWatchlistButtonClickHandler);
+    this.setWatchedClickHandler(this._watchedButtonClickHandler);
+    this.setFavoritesClickHandler(this._favoritesButtonClickHandler);
+    this.setDeleteCommentBtnHandler(this._deleteCommentBtnClickHanler);
+    this.setNewCommentHandler(this._addNewCommentHandler);
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+
   getEmojiElement(emoji) {
     const emojiImage = document.createElement(`img`);
     emojiImage.setAttribute(`src`, `./images/emoji/${emoji}.png`);
     emojiImage.setAttribute(`width`, `100%`);
     return emojiImage;
-  }
-
-  setNewCommentHandler(handler) {
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, handler);
-
-    this._addNewCommentHandler = handler;
   }
 
   _getCommentsTemplate(comments) {

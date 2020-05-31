@@ -79,8 +79,20 @@ export default class Stats extends AbstractSmartComponent {
     this._filter = `all-time`;
     this._chart = null;
     this._chartData = [];
+  }
 
+  setFilterStatisticsChangeHandler() {
+    this.getElement().querySelector(`.statistic__filters`)
+    .addEventListener(`change`, (evt) => {
+      evt.preventDefault();
+      if (evt.target.tagName !== `INPUT`) {
+        return;
+      }
 
+      const filterType = evt.target.value;
+      this._filter = filterType;
+      this.rerender();
+    });
   }
 
   createStatistics(movies, activeFilter) {
@@ -145,20 +157,6 @@ export default class Stats extends AbstractSmartComponent {
     super.rerender();
     this._renderChart();
     super.show();
-  }
-
-  setFilterStatisticsChangeHandler() {
-    this.getElement().querySelector(`.statistic__filters`)
-    .addEventListener(`change`, (evt) => {
-      evt.preventDefault();
-      if (evt.target.tagName !== `INPUT`) {
-        return;
-      }
-
-      const filterType = evt.target.value;
-      this._filter = filterType;
-      this.rerender();
-    });
   }
 
   _getTopGenre(movies) {
@@ -255,4 +253,5 @@ export default class Stats extends AbstractSmartComponent {
       }
     });
   }
+
 }

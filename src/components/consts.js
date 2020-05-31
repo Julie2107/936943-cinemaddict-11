@@ -9,11 +9,6 @@ export const Position = {
   BEFOREBEGIN: `beforebegin`
 };
 
-export const ExtraTitle = {
-  TOPRATED: `Top rated`,
-  COMMENTED: `Most commented`
-};
-
 export const EscKeys = {
   ESCAPE: `Escape`,
   ESC: `Esc`
@@ -39,4 +34,10 @@ export const UserRating = {
     name: `movie buff`,
     min: 21
   }
+};
+
+export const SortType = {
+  DATE: `date`,
+  RATING: `rating`,
+  DEFAULT: `default`,
 };

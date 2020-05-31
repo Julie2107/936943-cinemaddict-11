@@ -7,28 +7,33 @@ import MoviesModel from "./models/movies.js";
 import StatsComponent from "./components/statistic/stats.js";
 import {render, remove} from "./components/utils.js";
 
+const AUTHORIZATION = `Basic WubbaLubbaDubDUb`;
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+
 const main = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
 const footerStatsBlock = footer.querySelector(`.footer__statistics`);
-
-const AUTHORIZATION = `Basic WubbaLubbaDubDUb`;
-const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const init = () => {
   const api = new API(END_POINT, AUTHORIZATION);
   const moviesModel = new MoviesModel();
   const pageController = new PageController(main, moviesModel, api);
   const loadingComponent = new LoadingComponent();
+  const statsComponent = new StatsComponent(moviesModel);
+  const filterController = new FilterController(main, moviesModel, statsComponent, pageController);
+
 
   render(main, loadingComponent);
+
   api.getMovies()
   .then((movies) => {
     remove(loadingComponent);
+
     moviesModel.setMovies(movies);
-    const statsComponent = new StatsComponent(moviesModel);
-    const filterController = new FilterController(main, moviesModel, statsComponent, pageController);
+
     filterController.render();
     pageController.render();
+
     render(main, statsComponent);
     statsComponent.render();
     statsComponent.setFilterStatisticsChangeHandler();

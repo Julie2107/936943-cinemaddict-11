@@ -2,10 +2,9 @@ import CardComponent from "../components/filmcard/card.js";
 import FilmDetailsComponent from "../components/film-details/film-details.js";
 import CommentComponent from "../components/film-details/comments.js";
 import MovieModel from "../models/movie.js";
-import {encode} from "he";
-// import CardControlsComponent from "../components/filmcard/card-controls.js";
-import {render, remove, replace} from "../components/utils.js";
 import {Position} from "../components/consts.js";
+import {encode} from "he";
+import {render, remove, replace} from "../components/utils.js";
 
 const SHAKE_TIMEOUT = 600;
 
@@ -13,20 +12,19 @@ const Mode = {
   DEFAULT: `default`,
   DETAILS: `details`,
 };
+
 const footer = document.querySelector(`.footer`);
 
-export const EmptyComment = {};
-
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange, api) {
+  constructor(container, dataChangeHandler, viewChangeHandler, api) {
     this._container = container;
     this._api = api;
     this._mode = Mode.DEFAULT;
-    this._onDataChange = onDataChange;
-    this._onViewChange = onViewChange;
     this._cardComponent = null;
-    //  this._cardControlsComponent = null;
     this._filmDetailsBlock = null;
+
+    this._dataChangeHandler = dataChangeHandler;
+    this._viewChangeHandler = viewChangeHandler;
     this._escKeyHandler = this._escKeyHandler.bind(this);
     this._openFilmDetailsHandler = this._openFilmDetailsHandler.bind(this);
     this._closeDetailsHandler = this._closeDetailsHandler.bind(this);
@@ -81,24 +79,7 @@ export default class MovieController {
     } else {
       render(this._container, this._cardComponent);
     }
-    // this.renderCardControls(movie);
   }
-
-  /* renderCardControls(movie) {
-    const oldControls = this._cardControlsComponent;
-    this._cardControlsComponent = new CardControlsComponent(movie);
-    const oldDetailsBlock = this._filmDetailsBlock;
-    this._filmDetailsBlock = new FilmDetailsComponent(movie);
-
-    if (oldControls) {
-      replace(this._cardControlsComponent, oldControls);
-      replace(this._filmDetailsBlock, oldDetailsBlock);
-
-    }
-    render(this._cardComponent.getElement(), this._cardControlsComponent);
-    this._setDataChangeCardHandler(movie);
-
-  }*/
 
   destroy() {
     remove(this._cardComponent);
@@ -119,14 +100,14 @@ export default class MovieController {
       evt.preventDefault();
       const newMovie = MovieModel.clone(movie);
       newMovie.isFavorite = !newMovie.isFavorite;
-      this._onDataChange(this, movie, newMovie);
+      this._dataChangeHandler(this, movie, newMovie);
     });
 
     this._cardComponent.setInWatchlistClickHandler((evt) => {
       evt.preventDefault();
       const newMovie = MovieModel.clone(movie);
       newMovie.isInWatchlist = !newMovie.isInWatchlist;
-      this._onDataChange(this, movie, newMovie);
+      this._dataChangeHandler(this, movie, newMovie);
     });
 
     this._cardComponent.setWatchedClickHandler((evt) => {
@@ -134,7 +115,7 @@ export default class MovieController {
       const newMovie = MovieModel.clone(movie);
       newMovie.isWatched = !newMovie.isWatched;
 
-      this._onDataChange(this, movie, newMovie);
+      this._dataChangeHandler(this, movie, newMovie);
     });
   }
 
@@ -142,25 +123,25 @@ export default class MovieController {
     this._filmDetailsBlock.setFavoritesClickHandler(() => {
       const newMovie = MovieModel.clone(movie);
       newMovie.isFavorite = !newMovie.isFavorite;
-      this._onDataChange(this, movie, newMovie);
+      this._dataChangeHandler(this, movie, newMovie);
     });
 
     this._filmDetailsBlock.setInWatchlistClickHandler(() => {
       const newMovie = MovieModel.clone(movie);
       newMovie.isInWatchlist = !newMovie.isInWatchlist;
-      this._onDataChange(this, movie, newMovie);
+      this._dataChangeHandler(this, movie, newMovie);
     });
 
     this._filmDetailsBlock.setWatchedClickHandler(() => {
       const newMovie = MovieModel.clone(movie);
       newMovie.isWatched = !newMovie.isWatched;
 
-      this._onDataChange(this, movie, newMovie);
+      this._dataChangeHandler(this, movie, newMovie);
     });
   }
 
   _openFilmDetailsHandler(movie) {
-    this._onViewChange();
+    this._viewChangeHandler();
     this._renderMovie(movie);
     this._filmDetailsBlock.rerender();
     document.addEventListener(`keydown`, this._escKeyHandler);
@@ -176,12 +157,10 @@ export default class MovieController {
 
   _renderMovie() {
     render(footer, this._filmDetailsBlock, Position.AFTEREND);
-    // this._filmDetailsBlock._subscribeOnEvents();
     this._mode = Mode.DETAILS;
   }
 
   _closeDetailsHandler() {
-    // remove(this._filmDetailsBlock);
     this._filmDetailsBlock.getElement().remove();
     this._mode = Mode.DEFAULT;
 
@@ -210,7 +189,7 @@ export default class MovieController {
       evt.target.setAttribute(`disabled`, `true`);
 
       // evt.target.closest(`.film-details__comment`).remove();
-      this._onDataChange(this, movie, newMovie);
+      this._dataChangeHandler(this, movie, newMovie);
     })
     .catch(() => {
       this.shake(evt.target.closest(`.film-details__comment`));
@@ -229,9 +208,8 @@ export default class MovieController {
           newCommentForm.querySelector(`.film-details__comment-input`).style.border = `none`;
           newMovie.comments.splice(movie.comments.length, 0, newCommentData);
 
-
           [...newCommentForm.querySelectorAll(`textarea, input`)].forEach((element) => element.setAttribute(`disabled`, `disabled`));
-          this._onDataChange(this, movie, newMovie);
+          this._dataChangeHandler(this, movie, newMovie);
 
         })
         .then(() => this._renderNewComment(newCommentData))

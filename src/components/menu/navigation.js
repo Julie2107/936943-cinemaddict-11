@@ -5,7 +5,7 @@ const MenuClass = {
   STATS: `main-navigation__additional`
 };
 
-export const MenuItem = {
+const MenuItem = {
   MOVIES: `movies`,
   STATS: `stats`
 };

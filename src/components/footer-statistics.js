@@ -6,10 +6,10 @@ export default class FooterStats extends AbstractComponent {
   constructor(filmsamount) {
     super();
 
-    this._filmsamount = filmsamount;
+    this._filmsAmount = filmsamount;
   }
 
   getTemplate() {
-    return createFooterStatistics(this._filmsamount);
+    return createFooterStatistics(this._filmsAmount);
   }
 }

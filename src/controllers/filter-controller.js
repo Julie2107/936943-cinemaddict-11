@@ -21,14 +21,14 @@ export default class FilterController {
     this._statsComponent = statsComponent;
     this._pageController = pageController;
 
-    this._activeFilterType = FilterType.ALL;
     this._filterComponent = null;
+    this._activeFilterType = FilterType.ALL;
 
-    this._onDataChange = this._onDataChange.bind(this);
-    this._onFilterChange = this._onFilterChange.bind(this);
+    this._dataChangeHandler = this._dataChangeHandler.bind(this);
+    this._filterChangeHandler = this._filterChangeHandler.bind(this);
     this._menuClickHandler = this._menuClickHandler.bind(this);
 
-    this._moviesModel.setDataChangeHandler(this._onDataChange);
+    this._moviesModel.setDataChangeHandler(this._dataChangeHandler);
   }
 
   render() {
@@ -44,7 +44,7 @@ export default class FilterController {
     const oldComponent = this._filterComponent;
 
     this._filterComponent = new NavComponent(filters);
-    this._filterComponent.setFilterChangeHandler(this._onFilterChange);
+    this._filterComponent.setFilterChangeHandler(this._filterChangeHandler);
     this._filterComponent.setMenuClickHandler(this._menuClickHandler);
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
@@ -57,7 +57,7 @@ export default class FilterController {
     this._filterComponent.setMenuClickHandler(handler);
   }
   // коллбэк на изменение фильтра
-  _onFilterChange(filterType) {
+  _filterChangeHandler(filterType) {
     this._moviesModel.setFilter(filterType);
     this._activeFilterType = filterType;
   }
@@ -75,7 +75,7 @@ export default class FilterController {
     }
   }
 
-  _onDataChange() {
+  _dataChangeHandler() {
     this.render();
   }
 }
