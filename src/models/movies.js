@@ -2,6 +2,9 @@ import {FilterType} from "../components/consts.js";
 import {filterMovies} from "../controllers/filter-controller.js";
 import SortType from "../components/sorter/sort.js";
 import {generateUserRating} from "../mocks/profile.js";
+import {formatRuntime} from "../components/utils.js";
+import moment from "moment";
+
 
 export default class Movies {
   constructor() {
@@ -36,8 +39,6 @@ export default class Movies {
     this._callHandlers(this._filterChangeHandlers);
   }
 
-
-
   // изменение сортировки
 
   setSorter(sorterType) {
@@ -70,6 +71,31 @@ export default class Movies {
 
     this._callHandlers(this._dataChangeHandlers);
     return true;
+  }
+
+  getWatchedMovies(period) {
+    const watchedMovies = this._movies.filter((movie) => movie.isWatched);
+    if (period === 0) {
+      return watchedMovies;
+    }
+
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - period);
+
+    const filteredMovies = watchedMovies.slice().filter((movie) => moment(movie.viewDate).format() >= moment(currentDate).format());
+    return filteredMovies;
+  }
+
+  getUserRating(movies) {
+    const totalRunTime = movies.reduce((total, movie) => {
+      total += movie.runtime;
+      return total;
+    }, 0);
+    return {
+      number: movies.length,
+      rank: generateUserRating(movies.length),
+      totalTime: formatRuntime(totalRunTime)
+    };
   }
 
   addComment(comment, movie) {

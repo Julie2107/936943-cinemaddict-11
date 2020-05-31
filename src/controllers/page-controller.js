@@ -82,13 +82,13 @@ export default class PageController {
   }
 
   show() {
-  this._filmsBlockComponent.show();
-  this._sorterComponent.show();
+    this._filmsBlockComponent.show();
+    this._sorterComponent.show();
   }
 
   hide() {
-  this._filmsBlockComponent.hide();
-  this._sorterComponent.hide();
+    this._filmsBlockComponent.hide();
+    this._sorterComponent.hide();
   }
 
   _renderShowMoreBtn(movies) {

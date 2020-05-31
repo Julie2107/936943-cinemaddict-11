@@ -58,5 +58,5 @@ export const formatRuntime = (runtime) => {
   return {
     hours: Math.floor(runtime / HOUR),
     minutes: runtime % HOUR
-  }
-}
+  };
+};

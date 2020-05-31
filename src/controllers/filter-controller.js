@@ -3,10 +3,9 @@ import {FilterType} from "../components/consts.js";
 import {render, replace} from "../components/utils.js";
 
 export const MenuItem = {
-MOVIES: `movies`,
-STATS: `stats`
-}
-
+  MOVIES: `movies`,
+  STATS: `stats`
+};
 
 export const filterMovies = {
   'All movies': (movies) => movies,
@@ -32,7 +31,7 @@ export default class FilterController {
     this._moviesModel.setDataChangeHandler(this._onDataChange);
   }
 
-  render(statsComponent, pageController) {
+  render() {
     const container = this._container;
     const allMovies = this._moviesModel.getMoviesAll();
     const filters = Object.values(FilterType).map((filterType) => {
@@ -63,7 +62,7 @@ export default class FilterController {
     this._activeFilterType = filterType;
   }
 
-  _menuClickHandler(menuItem, statsComponent, pageController) {
+  _menuClickHandler(menuItem) {
     switch (menuItem) {
       case MenuItem.MOVIES:
         this._statsComponent.hide();

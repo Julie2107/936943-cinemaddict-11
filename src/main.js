@@ -24,26 +24,28 @@ const init = () => {
   const moviesModel = new MoviesModel();
   const pageController = new PageController(main, moviesModel, api);
   const loadingComponent = new LoadingComponent();
+
   render(main, loadingComponent);
   api.getMovies()
   .then((movies) => {
     remove(loadingComponent);
     moviesModel.setMovies(movies);
+    const statsComponent = new StatsComponent(moviesModel);
+    const filterController = new FilterController(main, moviesModel, statsComponent, pageController);
+    filterController.render();
     pageController.render();
+    render(main, statsComponent);
+    statsComponent.render();
+    statsComponent.setFilterStatisticsChangeHandler();
+    statsComponent.hide();
   });
   // const countIsWatched = moviesModel.getMovies().filter((movie) => movie.isWatched).length;
 
   const isWatchedMovies = moviesModel.getMoviesAll().filter((movie) => movie.isWatched);
-  const statsComponent = new StatsComponent(moviesModel.getMoviesAll());
-  const filterController = new FilterController(main, moviesModel, statsComponent, pageController);
-  filterController.render();
 
   render(header, new ProfileComponent(isWatchedMovies.length));
-  render(main, statsComponent);
-//  statsComponent.setFilterStatisticsChangeHandler();
-  statsComponent.hide();
 
-//  statsComponent.render();
+
   render(footerStatsBlock, new FooterStatsComponent(moviesModel.getMovies().length));
 };
 

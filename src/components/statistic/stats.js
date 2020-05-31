@@ -1,8 +1,6 @@
 import AbstractSmartComponent from "../abstract-smart-component.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {formatRuntime} from "../utils.js";
-import moment from "moment";
 
 const UserRating = {
   NOVICE: {
@@ -63,7 +61,6 @@ export const generateUserRating = (watched) => {
 
 const createStatsFilterItem = (filter, activeFilter) => {
   const isChecked = activeFilter === filter.id ? ` checked` : ``;
-  //  const checkedFilter = isChecked ? `checked` : ``;
   return (
     `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${filter.id}" value="${filter.id}" ${isChecked}>
     <label for="statistic-${filter.id}" class="statistic__filters-label">${filter.name}</label>`
@@ -75,23 +72,25 @@ const createStatsFilterMarkup = (filters, activeFilter) => filters.reduce((filte
   return filtersList;
 }, ``);
 
-
 export default class Stats extends AbstractSmartComponent {
-  constructor(movies) {
+  constructor(moviesModel) {
     super();
-    this._chart = null;
-    this._movies = movies;
+    this._moviesModel = moviesModel;
     this._filter = `all-time`;
+    this._chart = null;
     this._chartData = [];
+
+
   }
 
   createStatistics(movies, activeFilter) {
+
     return (
       `<section class="statistic">
         <p class="statistic__rank">
           Your rank
           <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-          <span class="statistic__rank-label">${this.getUserRating().rank}</span>
+          <span class="statistic__rank-label">${this._moviesModel.getUserRating(this._moviesModel.getWatchedMovies(StatsFilterValue[`all-time`])).rank}</span>
         </p>
 
         <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -102,15 +101,15 @@ export default class Stats extends AbstractSmartComponent {
         <ul class="statistic__text-list">
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">You watched</h4>
-            <p class="statistic__item-text">${this.getUserRating().number} <span class="statistic__item-description">movies</span></p>
+            <p class="statistic__item-text">${this._moviesModel.getUserRating(movies).number} <span class="statistic__item-description">movies</span></p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Total duration</h4>
-            <p class="statistic__item-text">${this.getUserRating().totalTime.hours} <span class="statistic__item-description">h</span> ${this.getUserRating().totalTime.minutes} <span class="statistic__item-description">m</span></p>
+            <p class="statistic__item-text">${this._moviesModel.getUserRating(movies).totalTime.hours} <span class="statistic__item-description">h</span> ${this._moviesModel.getUserRating(movies).totalTime.minutes} <span class="statistic__item-description">m</span></p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Top genre</h4>
-            <p class="statistic__item-text">${this._getTopGenre()}</p>
+            <p class="statistic__item-text">${this._getTopGenre(movies)}</p>
           </li>
         </ul>
 
@@ -123,30 +122,18 @@ export default class Stats extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return this.createStatistics(this._movies, this._filter);
+    return this.createStatistics(this._moviesModel.getWatchedMovies(StatsFilterValue[this._filter]));
   }
 
-  show(movies) {
+  show() {
     super.show();
-
-    this.rerender(movies);
+    this.rerender();
   }
 
   render() {
+    this._setChartData();
     this._renderChart();
     this.setFilterStatisticsChangeHandler();
-  }
-
-  recoveryListeners() {
-    this.setFilterStatisticsChangeHandler();
-  }
-
-  rerender(movies) {
-    this._movies = movies;
-    console.log(movies);
-    super.rerender();
-    this._renderChart();
-    super.show();
   }
 
   setFilterStatisticsChangeHandler() {
@@ -159,50 +146,20 @@ export default class Stats extends AbstractSmartComponent {
 
       const filterType = evt.target.value;
       this._filter = filterType;
-      //this._getFilteredMovies(filterType, this._movies)
-      this.rerender(this._getFilteredMovies(filterType, this._movies));
+      this.rerender();
     });
   }
 
-  getUserRating() {
-    const isWatchedMovies = this._getWatchedMovies();
-    const totalRunTime = isWatchedMovies.reduce((total, movie) => {
-      total += movie.runtime;
-      return total;
-    }, 0);
-    return {
-      number: isWatchedMovies.length,
-      rank: generateUserRating(isWatchedMovies.length),
-      totalTime: formatRuntime(totalRunTime)
-    };
-  }
-
-  _getWatchedMovies() {
-    return this._movies.filter((movie) => movie.isWatched);
-  }
-
-  _getTopGenre() {
-    const genres = this._getAmountByGenre();
+  _getTopGenre(movies) {
+    const genres = this._getAmountByGenre(movies);
     if (genres.length !== 0) {
       return genres[0].genre;
     }
     return `0`;
   }
 
-  _getAmountByGenre() {
-    const moviesGenres = this._getMoviesGenres();
-    const isWatchedMovies = this._getWatchedMovies();
-    return moviesGenres.map((genre) => {
-      return {
-        genre,
-        count: this._movies.filter((movie) => movie.genres.includes(genre)).length,
-      };
-    }).sort((prevGenre, nextGenre) => nextGenre.count - prevGenre.count);
-  }
-
-  _getMoviesGenres() {
-    const isWatchedMovies = this._getWatchedMovies();
-    return isWatchedMovies.reduce((genres, movie) => {
+  _getMoviesGenres(movies) {
+    return movies.reduce((genres, movie) => {
       movie.genres.forEach((genre) => {
         if (!genres.includes(genre)) {
           genres.push(genre);
@@ -212,36 +169,45 @@ export default class Stats extends AbstractSmartComponent {
     }, []);
   }
 
-  _getFilteredMovies(filterType, movies) {
-    const filterPeriod = StatsFilterValue[filterType];
-    if (filterType === 0) {
-      return movies;
-    }
+  _getAmountByGenre(movies) {
+    const moviesGenres = this._getMoviesGenres(movies);
+    return moviesGenres.map((genre) => {
+      return {
+        genre,
+        count: movies.filter((movie) => movie.genres.includes(genre)).length,
+      };
+    }).sort((prevGenre, nextGenre) => nextGenre.count - prevGenre.count);
+  }
 
-    const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - filterPeriod);
+  recoveryListeners() {
+    this.setFilterStatisticsChangeHandler();
+  }
 
-    const filteredMovies = movies.slice().filter((movie) => moment(movie.viewDate).format() >= moment(currentDate).format());
-    return filteredMovies;
+  rerender() {
+
+    super.rerender();
+    this._renderChart();
+    super.show();
+  }
+
+  _setChartData() {
+    this._chartData = this._getAmountByGenre(this._moviesModel.getWatchedMovies(StatsFilterValue[this._filter]));
   }
 
   _renderChart() {
-    const chartDataMovies = this._getAmountByGenre();
     const BAR_HEIGHT = 50;
     const statisticCtx = document.querySelector(`.statistic__chart`);
-    statisticCtx.height = BAR_HEIGHT * chartDataMovies.length;
-
+    statisticCtx.height = BAR_HEIGHT * this._chartData.length;
     this._Chart = new Chart(statisticCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: chartDataMovies.map((movie) => movie.genre),
+        labels: this._chartData.map((movie) => movie.genre),
         datasets: [{
-          data: chartDataMovies.map((movie) => movie.count),
+          data: this._chartData.map((movie) => movie.count),
           backgroundColor: `#ffe800`,
           hoverBackgroundColor: `#ffe800`,
-          anchor: `start`,
-          barThickness: 24
+          anchor: `start`
         }]
       },
       options: {
@@ -266,7 +232,8 @@ export default class Stats extends AbstractSmartComponent {
             gridLines: {
               display: false,
               drawBorder: false
-            }
+            },
+            barThickness: 24
           }],
           xAxes: [{
             ticks: {
@@ -287,9 +254,5 @@ export default class Stats extends AbstractSmartComponent {
         }
       }
     });
-  }
-
-  _resetCharts() {
-
   }
 }

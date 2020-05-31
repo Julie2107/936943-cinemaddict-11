@@ -1,18 +1,18 @@
 import AbstractComponent from "../abstract-component.js";
 
 const MenuClass = {
-MOVIES: `main-navigation__item`,
-STATS: `main-navigation__additional`
-}
+  MOVIES: `main-navigation__item`,
+  STATS: `main-navigation__additional`
+};
 
 export const MenuItem = {
-MOVIES: `movies`,
-STATS: `stats`
-}
+  MOVIES: `movies`,
+  STATS: `stats`
+};
 
 const createNavItem = (filter) => {
   return (
-      `<a href="#${filter.name.toLowerCase()}" class="main-navigation__item" data-menu-item ="${MenuItem.MOVIES}">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`
+    `<a href="#${filter.name.toLowerCase()}" class="main-navigation__item" data-menu-item ="${MenuItem.MOVIES}">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`
   );
 };
 
@@ -48,7 +48,7 @@ export default class Menu extends AbstractComponent {
       this._setActiveClass(evt);
       const menuItem = evt.target.dataset.menuItem;
       handler(menuItem);
-    })
+    });
   }
 
   setFilterChangeHandler(handler) {
@@ -56,15 +56,14 @@ export default class Menu extends AbstractComponent {
       evt.preventDefault();
       const getFilterName = (targetData) => {
         return targetData.replace(`#${targetData[1]}`, targetData[1].toUpperCase());
-      }
+      };
       const filterName = getFilterName(evt.target.getAttribute(`href`));
-      //this._setActiveClass(evt);
       handler(filterName);
     });
   }
 
   _setActiveClass(evt) {
-    [...this.getElement().querySelectorAll(`.${MenuClass.MOVIES}, .${MenuClass.STATS}` )].forEach((item) => {
+    [...this.getElement().querySelectorAll(`.${MenuClass.MOVIES}, .${MenuClass.STATS}`)].forEach((item) => {
       item.classList.remove(`${MenuClass.MOVIES}--active`);
       item.classList.remove(`${MenuClass.STATS}--active`);
       if (evt.target === item) {
