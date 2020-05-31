@@ -1,5 +1,5 @@
-import AbstractComponent from "../abstract-smart-component.js";
-import {generateDate} from "../../mocks/mocks-utils.js";
+import AbstractComponent from "../abstract-component.js";
+import {generateDate} from "../utils.js";
 
 const createDetailsComment = (comment) => {
   return (

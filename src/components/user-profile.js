@@ -1,5 +1,5 @@
-import {generateUserRating} from "../mocks/profile.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import {generateUserRating} from "./utils.js";
 
 const createUserProfile = (watched) => {
   return (

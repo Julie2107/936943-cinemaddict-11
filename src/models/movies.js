@@ -1,7 +1,7 @@
 import {FilterType} from "../components/consts.js";
 import {filterMovies} from "../controllers/filter-controller.js";
 import SortType from "../components/sorter/sort.js";
-import {generateUserRating} from "../mocks/profile.js";
+import {generateUserRating} from "../components/utils.js";
 import {formatRuntime} from "../components/utils.js";
 import moment from "moment";
 

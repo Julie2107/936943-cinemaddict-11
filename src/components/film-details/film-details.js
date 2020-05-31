@@ -1,11 +1,11 @@
+import AbstractSmartComponent from "../abstract-smart-component.js";
+import CommentComponent from "./comments.js";
 import {createDetailsPoster} from "./details-poster.js";
 import {createDetailsHead} from "./details-head.js";
 import {createDetailsTable} from "./details-table.js";
 import {createDetailsDesc} from "./details-desc.js";
 import {createDetailsControls} from "./details-controls.js";
 import {createDetailsNewComment} from "./comment-new.js";
-import AbstractSmartComponent from "../abstract-smart-component.js";
-import CommentComponent from "./comments.js";
 
 const createFilmDetails = (movie, commentsMarkup) => {
   return (
@@ -29,7 +29,7 @@ const createFilmDetails = (movie, commentsMarkup) => {
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${movie.comments.length}</span></h3>
             <ul class="film-details__comments-list">
-                    ${commentsMarkup}
+              ${commentsMarkup}
             </ul>
             ${createDetailsNewComment()}
           </section>
@@ -43,14 +43,14 @@ export default class FilmDetails extends AbstractSmartComponent {
   constructor(movie) {
     super();
     this._movie = movie;
-    this._setEmojiClickButtonHandler = null;
+    this._emojiClickButtonHandler = null;
 
-    this._setCloseButtonClickHandler = null;
-    this._setInWatchlistButtonClickHandler = null;
-    this._setWatchedButtonClickHandler = null;
-    this._setFavoritesButtonClickHandler = null;
-    this._setEmojiClickButtonHandler = null;
-    this._setDeleteCommentBtnClickHanler = null;
+    this._closeButtonClickHandler = null;
+    this._inWatchlistButtonClickHandler = null;
+    this._watchedButtonClickHandler = null;
+    this._favoritesButtonClickHandler = null;
+    this._emojiClickButtonHandler = null;
+    this._deleteCommentBtnClickHanler = null;
     this._addNewCommentHandler = null;
   }
 
@@ -60,12 +60,12 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   recoveryListeners() {
   //  this._subscribeOnEvents();
-    this.setEmojiClickHandler(this._setEmojiClickButtonHandler);
-    this.setCloseButtonHandler(this._setCloseButtonClickHandler);
-    this.setInWatchlistClickHandler(this._setInWatchlistButtonClickHandler);
-    this.setWatchedClickHandler(this._setWatchedButtonClickHandler);
-    this.setFavoritesClickHandler(this._setFavoritesButtonClickHandler);
-    this.setDeleteCommentBtnHandler(this._setDeleteCommentBtnClickHanler);
+    this.setEmojiClickHandler(this._emojiClickButtonHandler);
+    this.setCloseButtonHandler(this._closeButtonClickHandler);
+    this.setInWatchlistClickHandler(this._inWatchlistButtonClickHandler);
+    this.setWatchedClickHandler(this._watchedButtonClickHandler);
+    this.setFavoritesClickHandler(this._favoritesButtonClickHandler);
+    this.setDeleteCommentBtnHandler(this._deleteCommentBtnClickHanler);
     this.setNewCommentHandler(this._addNewCommentHandler);
   }
 
@@ -76,28 +76,28 @@ export default class FilmDetails extends AbstractSmartComponent {
   setCloseButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
 
-    this._setCloseButtonClickHandler = handler;
+    this._closeButtonClickHandler = handler;
   }
 
   setInWatchlistClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`)
     .addEventListener(`click`, handler);
 
-    this._setInWatchlistButtonClickHandler = handler;
+    this._inWatchlistButtonClickHandler = handler;
   }
 
   setWatchedClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`)
     .addEventListener(`click`, (handler));
 
-    this._setWatchedButtonClickHandler = handler;
+    this._watchedButtonClickHandler = handler;
   }
 
   setFavoritesClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, handler);
 
-    this._setFavoritesButtonClickHandler = handler;
+    this._favoritesButtonClickHandler = handler;
   }
 
   setDeleteCommentBtnHandler(handler) {
@@ -106,14 +106,14 @@ export default class FilmDetails extends AbstractSmartComponent {
     Array.from(deleteButtons).forEach((button) => {
       button.addEventListener(`click`, handler);
     });
-    this._setDeleteCommentBtnClickHanler = handler;
+    this._deleteCommentBtnClickHanler = handler;
   }
 
   setEmojiClickHandler(handler) {
     this.getElement().querySelector(`.film-details__emoji-list`)
       .addEventListener(`change`, handler);
 
-    this._setEmojiClickButtonHandler = handler;
+    this._emojiClickButtonHandler = handler;
   }
 
   getEmojiElement(emoji) {

@@ -1,4 +1,5 @@
-import {Position, EscKeys} from "./consts.js";
+import {Position, EscKeys, UserRating} from "./consts.js";
+import moment from "moment";
 
 const DECIMAL = 10;
 const HOUR = 60;
@@ -59,4 +60,26 @@ export const formatRuntime = (runtime) => {
     hours: Math.floor(runtime / HOUR),
     minutes: runtime % HOUR
   };
+};
+
+export const generateDate = (date) => {
+  return {
+    day: moment(date).format(`DD`),
+    month: moment(date).format(`MMMM`),
+    integermonth: moment(date).format(`MM`),
+    year: moment(date).format(`YYYY`),
+    hours: moment(date).format(`HH`),
+    minutes: moment(date).format(`mm`)
+  };
+};
+
+export const generateUserRating = (watched) => {
+  if (watched >= UserRating.BUFF.min) {
+    return UserRating.BUFF.name;
+  } else if (watched >= UserRating.FAN.min) {
+    return UserRating.FAN.name;
+  } else if (watched >= UserRating.NOVICE.min) {
+    return UserRating.NOVICE.name;
+  }
+  return ``;
 };

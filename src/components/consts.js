@@ -25,3 +25,18 @@ export const FilterType = {
   HISTORY: `History`,
   FAVORITES: `Favorites`
 };
+
+export const UserRating = {
+  NOVICE: {
+    name: `novice`,
+    min: 1
+  },
+  FAN: {
+    name: `fan`,
+    min: 11
+  },
+  BUFF: {
+    name: `movie buff`,
+    min: 21
+  }
+};

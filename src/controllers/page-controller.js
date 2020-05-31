@@ -7,9 +7,7 @@ import NoFilmsComponent from "../components/film-block/no-films.js";
 import MoreButtonComponent from "../components/film-block/more-button.js";
 import MovieController from "./movie-controller.js";
 import ProfileComponent from "../components/user-profile.js";
-
-import {render, remove} from "../components/utils.js";
-import {generateDate} from "../mocks/mocks-utils.js";
+import {render, remove, generateDate} from "../components/utils.js";
 
 const header = document.querySelector(`.header`);
 

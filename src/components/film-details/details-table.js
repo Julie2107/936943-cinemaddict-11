@@ -1,16 +1,4 @@
-import moment from "moment";
-import {formatRuntime} from "../utils.js";
-
-export const generateDate = (date) => {
-  return {
-    day: moment(date).format(`DD`),
-    month: moment(date).format(`MMMM`),
-    integermonth: moment(date).format(`MM`),
-    year: moment(date).format(`YYYY`),
-    hours: moment(date).format(`HH`),
-    minutes: moment(date).format(`mm`)
-  };
-};
+import {formatRuntime, generateDate} from "../utils.js";
 
 const createGenresMarkup = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
@@ -21,9 +9,11 @@ const createGenresList = (genres) => genres.reduce((genresList, genre) => {
   return genresList;
 }, ``);
 
-const getReleaseDate = (date) => `${generateDate(date).day} ${generateDate(date).month} ${generateDate(date).year}`;
-
 export const createDetailsTable = (movie) => {
+
+  const getReleaseDate = (date) => `${generateDate(date).day} ${generateDate(date).month} ${generateDate(date).year}`;
+
+  const isMultipleGenre = movie.genres.length > 1 ? `Genres` : `Genre`;
 
   return (
     `<table class="film-details__table">
@@ -45,14 +35,14 @@ export const createDetailsTable = (movie) => {
       </tr>
       <tr class="film-details__row">
         <td class="film-details__term">Runtime</td>
-        <td class="film-details__cell">${formatRuntime(movie.runtime).hours}h ${formatRuntime(movie.runtime).hours}m</td>
+        <td class="film-details__cell">${formatRuntime(movie.runtime).hours}h ${formatRuntime(movie.runtime).minutes}m</td>
       </tr>
       <tr class="film-details__row">
         <td class="film-details__term">Country</td>
         <td class="film-details__cell">${movie.country}</td>
       </tr>
       <tr class="film-details__row">
-        <td class="film-details__term">Genres</td>
+        <td class="film-details__term">${isMultipleGenre}</td>
         <td class="film-details__cell">
           ${createGenresList(movie.genres)}
       </tr>
