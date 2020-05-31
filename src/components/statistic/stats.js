@@ -136,6 +136,17 @@ export default class Stats extends AbstractSmartComponent {
     this.setFilterStatisticsChangeHandler();
   }
 
+  recoveryListeners() {
+    this.setFilterStatisticsChangeHandler();
+  }
+
+  rerender() {
+    this._setChartData();
+    super.rerender();
+    this._renderChart();
+    super.show();
+  }
+
   setFilterStatisticsChangeHandler() {
     this.getElement().querySelector(`.statistic__filters`)
     .addEventListener(`change`, (evt) => {
@@ -177,17 +188,6 @@ export default class Stats extends AbstractSmartComponent {
         count: movies.filter((movie) => movie.genres.includes(genre)).length,
       };
     }).sort((prevGenre, nextGenre) => nextGenre.count - prevGenre.count);
-  }
-
-  recoveryListeners() {
-    this.setFilterStatisticsChangeHandler();
-  }
-
-  rerender() {
-
-    super.rerender();
-    this._renderChart();
-    super.show();
   }
 
   _setChartData() {

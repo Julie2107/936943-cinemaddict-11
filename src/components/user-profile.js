@@ -1,5 +1,5 @@
 import {generateUserRating} from "../mocks/profile.js";
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createUserProfile = (watched) => {
   return (
@@ -10,13 +10,22 @@ const createUserProfile = (watched) => {
   );
 };
 
-export default class Profile extends AbstractComponent {
-  constructor(watched) {
+export default class Profile extends AbstractSmartComponent {
+  constructor(moviesModel) {
     super();
-    this._watched = watched;
+    this._moviesModel = moviesModel;
+
   }
 
   getTemplate() {
-    return createUserProfile(this._watched);
+    return createUserProfile(this._moviesModel.getWatchedMovies(0).length);
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
+    return;
   }
 }
