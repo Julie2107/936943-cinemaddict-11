@@ -1,6 +1,6 @@
 import CardComponent from "../components/filmcard/card.js";
 import FilmDetailsComponent from "../components/film-details/film-details.js";
-import CommentComponent from "../components/film-details/comments.js";
+import CommentComponent from "../components/film-details/comment.js";
 import MovieModel from "../models/movie.js";
 import {Position} from "../components/consts.js";
 import {encode} from "he";

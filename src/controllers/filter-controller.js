@@ -1,4 +1,4 @@
-import NavComponent from "../components/menu/navigation.js";
+import MenuComponent from "../components/menu/menu.js";
 import {FilterType} from "../components/consts.js";
 import {render, replace} from "../components/utils.js";
 
@@ -43,7 +43,7 @@ export default class FilterController {
     });
     const oldComponent = this._filterComponent;
 
-    this._filterComponent = new NavComponent(filters);
+    this._filterComponent = new MenuComponent(filters);
     this._filterComponent.setFilterChangeHandler(this._filterChangeHandler);
     this._filterComponent.setMenuClickHandler(this._menuClickHandler);
     if (oldComponent) {

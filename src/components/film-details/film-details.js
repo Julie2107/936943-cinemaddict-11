@@ -1,5 +1,5 @@
 import AbstractSmartComponent from "../abstract-smart-component.js";
-import CommentComponent from "./comments.js";
+import CommentComponent from "./comment.js";
 import {createDetailsPoster} from "./details-poster.js";
 import {createDetailsHead} from "./details-head.js";
 import {createDetailsTable} from "./details-table.js";

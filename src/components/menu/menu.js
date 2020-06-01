@@ -11,8 +11,9 @@ const MenuItem = {
 };
 
 const createNavItem = (filter) => {
+  const isCreateCount = filter.name !== `All movies` ? `<span class="main-navigation__item-count">${filter.count}</span>` : ``;
   return (
-    `<a href="#${filter.name.toLowerCase()}" class="main-navigation__item" data-menu-item ="${MenuItem.MOVIES}">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`
+    `<a href="#${filter.name.toLowerCase()}" class="main-navigation__item" data-menu-item ="${MenuItem.MOVIES}">${filter.name} ${isCreateCount}</a>`
   );
 };
 
