@@ -5,6 +5,7 @@ import PageController from "./controllers/page-controller.js";
 import FilterController from "./controllers/filter-controller.js";
 import MoviesModel from "./models/movies.js";
 import StatsComponent from "./components/statistic/stats.js";
+import NoFilmsComponent from "./components/film-block/no-films.js";
 import {render, remove} from "./components/utils.js";
 
 const AUTHORIZATION = `Basic WubbaLubbaDubDUb`;
@@ -22,25 +23,28 @@ const init = () => {
   const statsComponent = new StatsComponent(moviesModel);
   const filterController = new FilterController(main, moviesModel, statsComponent, pageController);
 
-
   render(main, loadingComponent);
 
   api.getMovies()
-  .then((movies) => {
-    remove(loadingComponent);
+    .then((movies) => {
+      remove(loadingComponent);
 
-    moviesModel.setMovies(movies);
+      moviesModel.setMovies(movies);
 
-    filterController.render();
-    pageController.render();
+      filterController.render();
+      pageController.render();
 
-    render(main, statsComponent);
-    statsComponent.render();
-    statsComponent.setFilterStatisticsChangeHandler();
-    statsComponent.hide();
+      render(main, statsComponent);
+      statsComponent.render();
+      statsComponent.setFilterStatisticsChangeHandler();
+      statsComponent.hide();
 
-    render(footerStatsBlock, new FooterStatsComponent(moviesModel.getMovies().length));
-  });
+      render(footerStatsBlock, new FooterStatsComponent(moviesModel.getMovies().length));
+    })
+    .catch(() => {
+      remove(loadingComponent);
+      render(main, new NoFilmsComponent());
+    });
 };
 
 init();

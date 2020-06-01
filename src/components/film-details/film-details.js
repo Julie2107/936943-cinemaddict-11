@@ -55,21 +55,22 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setCloseButtonHandler(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, handler);
 
     this._closeButtonClickHandler = handler;
   }
 
   setInWatchlistClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`)
-    .addEventListener(`click`, handler);
+      .addEventListener(`click`, handler);
 
     this._inWatchlistButtonClickHandler = handler;
   }
 
   setWatchedClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`)
-    .addEventListener(`click`, (handler));
+      .addEventListener(`click`, (handler));
 
     this._watchedButtonClickHandler = handler;
   }
@@ -98,7 +99,8 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setNewCommentHandler(handler) {
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, handler);
+    this.getElement().querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, handler);
 
     this._addNewCommentHandler = handler;
   }
@@ -108,7 +110,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-  //  this._subscribeOnEvents();
     this.setEmojiClickHandler(this._emojiClickButtonHandler);
     this.setCloseButtonHandler(this._closeButtonClickHandler);
     this.setInWatchlistClickHandler(this._inWatchlistButtonClickHandler);
@@ -121,7 +122,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   rerender() {
     super.rerender();
   }
-
 
   getEmojiElement(emoji) {
     const emojiImage = document.createElement(`img`);

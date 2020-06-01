@@ -2,6 +2,8 @@ import AbstractSmartComponent from "../abstract-smart-component.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+const NO_GENRE = `0`;
+
 const UserRating = {
   NOVICE: {
     name: `novice`,
@@ -134,7 +136,7 @@ export default class Stats extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return this.createStatistics(this._moviesModel.getWatchedMovies(StatsFilterValue[this._filter]));
+    return this.createStatistics(this._moviesModel.getWatchedMovies(StatsFilterValue[this._filter]), this._filter);
   }
 
   show() {
@@ -164,7 +166,7 @@ export default class Stats extends AbstractSmartComponent {
     if (genres.length !== 0) {
       return genres[0].genre;
     }
-    return `0`;
+    return NO_GENRE;
   }
 
   _getMoviesGenres(movies) {

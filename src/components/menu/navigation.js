@@ -54,6 +54,9 @@ export default class Menu extends AbstractComponent {
   setFilterChangeHandler(handler) {
     this.getElement().querySelector(`.main-navigation__items`).addEventListener(`click`, (evt) => {
       evt.preventDefault();
+      if (!evt.target.classList.contains(`main-navigation__item`)) {
+        return;
+      }
       const getFilterName = (targetData) => {
         return targetData.replace(`#${targetData[1]}`, targetData[1].toUpperCase());
       };

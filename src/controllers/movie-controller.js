@@ -7,10 +7,17 @@ import {encode} from "he";
 import {render, remove, replace} from "../components/utils.js";
 
 const SHAKE_TIMEOUT = 600;
+const SECONDS_COEFFITIENT = 1000;
+const DELETE_IN_PROGRESS = `Deleting...`;
 
 const Mode = {
   DEFAULT: `default`,
   DETAILS: `details`,
+};
+
+const InputBorderStyle = {
+  DEFAULT: `none`,
+  ERROR: `2px solid red`
 };
 
 const footer = document.querySelector(`.footer`);
@@ -88,7 +95,7 @@ export default class MovieController {
   }
 
   shake(block) {
-    block.style.animation = `shake ${SHAKE_TIMEOUT / 1000}s`;
+    block.style.animation = `shake ${SHAKE_TIMEOUT / SECONDS_COEFFITIENT}s`;
 
     setTimeout(() => {
       block.style.animation = ``;
@@ -185,10 +192,9 @@ export default class MovieController {
     .then(() => {
       newMovie.comments = movie.comments;
       newMovie.comments.splice(commentIndex, 1);
-      evt.target.textcontent = `Deleting...`;
+      evt.target.textcontent = DELETE_IN_PROGRESS;
       evt.target.setAttribute(`disabled`, `true`);
 
-      // evt.target.closest(`.film-details__comment`).remove();
       this._dataChangeHandler(this, movie, newMovie);
     })
     .catch(() => {
@@ -205,7 +211,7 @@ export default class MovieController {
       const newCommentForm = document.querySelector(`.film-details__inner`);
       this._api.createComment(newMovie.id, newCommentData)
         .then(() => {
-          newCommentForm.querySelector(`.film-details__comment-input`).style.border = `none`;
+          newCommentForm.querySelector(`.film-details__comment-input`).style.border = InputBorderStyle.DEFAULT;
           newMovie.comments.splice(movie.comments.length, 0, newCommentData);
 
           [...newCommentForm.querySelectorAll(`textarea, input`)].forEach((element) => element.setAttribute(`disabled`, `disabled`));
@@ -215,7 +221,7 @@ export default class MovieController {
         .then(() => this._renderNewComment(newCommentData))
         .catch(() => {
           this.shake(newCommentForm);
-          newCommentForm.querySelector(`.film-details__comment-input`).style.border = `2px solid red`;
+          newCommentForm.querySelector(`.film-details__comment-input`).style.border = InputBorderStyle.ERROR;
           [...newCommentForm.querySelectorAll(`textarea, input`)].forEach((element) => element.removeAttribute(`disabled`));
         });
     }

@@ -41,3 +41,9 @@ export const SortType = {
   RATING: `rating`,
   DEFAULT: `default`,
 };
+
+export const AbstractMethodsError = {
+  CONSTRUCTOR: `Can't instantiate AbstractComponent, only concrete one.`,
+  TEMPLATE: `Abstract method not implemented: getTemplate`,
+  RECOVERY: `Abstract method not implemented: recoveryListeners`
+};
